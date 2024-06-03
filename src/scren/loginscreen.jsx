@@ -13,7 +13,7 @@ const loginscreen = () => {
 				<Text style={styles.helloText}>Hello</Text>
 			</View>
 			<View>
-				<Text style={styles.singIntext}>Sing in to your account</Text>
+				<Text style={styles.singIntext}>Sign in to your account</Text>
 			</View>
 			<FontAwesome name={"user"} size={30} color={"black"}/>
         </View>
