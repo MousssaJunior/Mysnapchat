@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'reac
 import React from 'react';
 
 import FontAwesome from "react-native-vector-icons/dist/FontAwesome";
-// import LinearGradient from 'react-native-linear-gradient';
 
 const loginscreen = () => {
 	return (
