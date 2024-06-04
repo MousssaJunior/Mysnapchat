@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image, TextInput } from 'react-native';
 import React from 'react';
 import FontAwesome from "react-native-vector-icons/dist/FontAwesome";
-import LinearGradient from 'react-native-linear-gradient';
+
 
 const loginscreen = () => {
 	return (
@@ -38,11 +38,11 @@ const loginscreen = () => {
 			<Text style={styles.forgotPasswordtext}>Forgot your password?</Text>
 			<View style={styles.singInButtonContainer}>
 				<Text style={styles.singIn}>Sign in</Text>
-				<LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.linearGradient}>
+				<View  style={styles.linearGradient}>
 					<Text style={styles.buttonText}>
 						Sign in with Facebook
 					</Text>
-				</LinearGradient>
+				</View>
 			</View>
 		</View>
 	);
