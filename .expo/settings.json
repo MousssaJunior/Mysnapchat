@@ -1,3 +1,6 @@
 {
-  "urlRandomness": "FZSRLTg"
+  "urlRandomness": "FZSRLTg",
+  "dev": true,
+  "minify": false,
+  "https": false
 }
