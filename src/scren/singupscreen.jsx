@@ -1,15 +1,56 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
 import React, { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { launchImageLibrary } from 'react-native-image-picker';
+import axios from 'axios';
 
 const SignupScreen = ({ navigation }) => {
-  const [profileImage, setProfileImage] = useState(null);
+  const [profilePicture, setProfilePicture] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const register = async () => {
+    if (email && password && username) {
+      try {
+        console.log('Data being sent:', {
+          email,
+          username,
+          profilePicture,
+          password,
+        });
+
+        const response = await axios.post('https://snapchat.epidoc.eu/user', {
+          email,
+          username,
+          profilePicture,
+          password,
+        });
+
+        if (response.status === 200) {
+          Alert.alert('Inscription réussie');
+          navigation.navigate('Login');
+        } else {
+          Alert.alert('Erreur lors de l\'inscription', response.data.message || 'Une erreur est survenue.');
+        }
+      } catch (error) {
+        if (error.response) {
+          console.log('Error response:', error.response.data);
+          Alert.alert('Erreur lors de l\'inscription', JSON.stringify(error.response.data) || 'Une erreur est survenue.');
+        } else {
+          console.log('Error message:', error.message);
+          Alert.alert('Erreur lors de l\'inscription', error.message);
+        }
+      }
+    } else {
+      Alert.alert('Veuillez remplir tous les champs');
+    }
+  };
 
   const chooseImage = () => {
     launchImageLibrary({}, (response) => {
       if (response.assets && response.assets.length > 0) {
-        setProfileImage(response.assets[0].uri);
+        setProfilePicture(response.assets[0].uri);
       }
     });
   };
@@ -26,35 +67,49 @@ const SignupScreen = ({ navigation }) => {
         <Text style={styles.signInText}>Create your account</Text>
       </View>
       <TouchableOpacity style={styles.imagePicker} onPress={chooseImage}>
-        {profileImage ? (
-          <Image source={{ uri: profileImage }} style={styles.profileImage} />
+        {profilePicture ? (
+          <Image source={{ uri: profilePicture }} style={styles.profilePicture} />
         ) : (
           <FontAwesome name="camera" size={30} color="#C8C8C8" />
         )}
       </TouchableOpacity>
       <View style={styles.inputContainer}>
         <FontAwesome name="user" size={30} color="#C8C8C8" style={styles.inputIcon} />
-        <TextInput style={styles.textInput} placeholder="Username" />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+        />
       </View>
       <View style={styles.inputContainer}>
         <FontAwesome name="envelope" size={30} color="#C8C8C8" style={styles.inputIcon} />
-        <TextInput style={styles.textInput} placeholder="Email" />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+        />
       </View>
       <View style={styles.inputContainer}>
         <FontAwesome name="lock" size={30} color="#C8C8C8" style={styles.inputIcon} />
-        <TextInput style={styles.textInput} placeholder="Password" secureTextEntry />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Password"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
       </View>
-      <TouchableOpacity style={styles.signupButtonContainer}>
+      <TouchableOpacity style={styles.signupButtonContainer} onPress={register}>
         <Text style={styles.signupButton}>Sign up</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={styles.loginRedirect}>Already have an account? Login</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 };
-
-export default SignupScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -97,7 +152,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
   },
-  profileImage: {
+  profilePicture: {
     width: 100,
     height: 100,
     borderRadius: 10,
@@ -139,3 +194,5 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 });
+
+export default SignupScreen;
