@@ -2,8 +2,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginScreen from '../src/scren/loginscreen';
-import SingupScreen from '../src/scren/singupscreen';
+import LoginScreen from '../src/scren/LoginScreen'; // Corrected path
+import SignupScreen from '../src/scren/singupscreen'; // Corrected path
+import LoginForm from '../src/Form/loginForm'; // Corrected name and path
 
 const Stack = createNativeStackNavigator();
 
@@ -12,7 +13,8 @@ const _layout = () => {
     <NavigationContainer independent={true}>
       <Stack.Navigator>
         <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Singup" component={SingupScreen} />
+        <Stack.Screen name="Signup" component={SignupScreen} />
+        <Stack.Screen name="LoginForm" component={LoginForm} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -21,3 +23,4 @@ const _layout = () => {
 export default _layout;
 
 const styles = StyleSheet.create({});
+
