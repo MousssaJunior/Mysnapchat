@@ -8,14 +8,13 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const navigation = useNavigation();
+const [secureTextEntry, setSecureTextEntry] = useState(true);
+    const navigation = useNavigation();
 
   const validateEmail = (email) => {
     // Vérifie si l'email contient un @ et au moins un caractère après
     return email.includes('@') && email.split('@')[1].length > 0;
   };
-
   const login = async () => {
     if (!email || !password) {
       Alert.alert('Veuillez entrer un email et un mot de passe');
@@ -30,38 +29,48 @@ const LoginScreen = () => {
     setLoading(true);
   
     try {
-      const response = await axios.post('https://snapchat.epidoc.eu/user', {
+      const response = await axios.put('https://snapchat.epidoc.eu/user', {
         email,
         password,
       });
   
-      // Afficher la réponse et le statut de la requête dans des alertes
-      Alert.alert('Réponse de la requête', JSON.stringify(response));
-      Alert.alert('Statut de la requête', response.status.toString());
-  
-      if (response.status === 200 && response.data.token) {
-        // Si la connexion réussit, afficher une alerte et naviguer vers l'écran de registre
-        Alert.alert('Connexion Réussie');
-        navigation.navigate('register');
+      if (response.status === 200) {
+        Alert.alert('Inscription réussie');
+        navigation.navigate('Camera');
       } else {
-        // Si la réponse a un statut autre que 200 ou si le token est manquant, afficher un message d'erreur
-        if (response.data && response.data.message) {
-          Alert.alert('Erreur de connexion', response.data.message);
-        } else {
-          Alert.alert('Erreur de connexion', 'Identifiants invalides');
-        }
+        Alert.alert('Erreur lors de la connexion', response.data.message || 'Une erreur est survenue.');
       }
     } catch (error) {
-      // Afficher le message d'erreur générique pour les erreurs réseau ou autres
-      Alert.alert('Erreur de connexion', 'Une erreur est survenue lors de la connexion.');
-      // Afficher l'erreur spécifique s'il y en a une
-      Alert.alert('Erreur spécifique', error.message);
+      if (error.response) {
+        console.log('Error response:', error.response.data);
+        let errorMessage = 'Une erreur est survenue.';
+        if (error.response.data.message) {
+          switch (error.response.data.message) {
+            case 'user not found':
+              errorMessage = 'Utilisateur non trouvé';
+              break;
+            case 'credentials are bad':
+              errorMessage = 'Les identifiants sont incorrects';
+              break;
+            default:
+              errorMessage = error.response.data.message;
+          }
+        }
+        Alert.alert('Erreur lors de la connexion', errorMessage);
+      } else {
+        console.log('Error message:', error.message);
+        Alert.alert('Erreur lors de la connexion', error.message);
+      }
     } finally {
       setLoading(false);
     }
   };
   
   
+
+
+
+
   return (
     <View style={styles.container}>
       <View style={styles.TopimageContainer}>
@@ -76,47 +85,47 @@ const LoginScreen = () => {
       <View style={styles.inputContainer}>
         <FontAwesome name="user" size={30} color="#C8C8C8" style={styles.inputIcon} />
         <TextInput
-          style={styles.textInput}
-          placeholder="Email"
+style={styles.textInput}
+                    placeholder="Email"
           value={email}
           onChangeText={(text) => setEmail(text)}
         />
-      </View>
+</View>
       <View style={styles.inputContainer}>
         <FontAwesome name="lock" size={30} color="#C8C8C8" style={styles.inputIcon} />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Password"
+              <TextInput
+style={styles.textInput}
+                    placeholder="Password"
           secureTextEntry={secureTextEntry}
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
-        <TouchableOpacity onPress={() => setSecureTextEntry(!secureTextEntry)}>
+<TouchableOpacity onPress={() => setSecureTextEntry(!secureTextEntry)}>
           <FontAwesome name={secureTextEntry ? "eye-slash" : "eye"} size={30} color="#C8C8C8" />
         </TouchableOpacity>
       </View>
       <Text style={styles.forgotPasswordtext}>Forgot your password?</Text>
-      <TouchableOpacity style={styles.signInButtonContainer} onPress={login} disabled={loading}>
+              <TouchableOpacity style={styles.signInButtonContainer} onPress={login} disabled={loading}>
         {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.signIn}>Sign in</Text>}
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+<TouchableOpacity onPress={() => navigation.navigate('Signup')}>
         <Text style={styles.signupRedirect}>Don't have an account? Sign Up</Text>
       </TouchableOpacity>
       <View style={styles.linearGradient}>
         <Text style={styles.buttonText}>Sign in with Facebook</Text>
       </View>
-    </View>
+          </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+backgroundColor: '#fff',
+        alignItems: 'center',
     justifyContent: 'center',
   },
-  TopimageContainer: {
+TopimageContainer: {
     alignItems: 'center',
     marginBottom: 20,
   },
@@ -153,7 +162,7 @@ const styles = StyleSheet.create({
     color: '#C8C8C8',
     marginBottom: 20,
   },
-  signInButtonContainer: {
+    signInButtonContainer: {
     backgroundColor: '#4CAF50',
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -164,22 +173,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
-  linearGradient: {
-    backgroundColor: '#3b5998',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  signupRedirect: {
-    color: "#BEBEBE",
-    textAlign: "center",
-    marginTop: 20,
-    fontSize: 15,
-  },
-});
+  });
 
 export default LoginScreen;
