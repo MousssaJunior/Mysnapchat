@@ -8,35 +8,35 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-const [secureTextEntry, setSecureTextEntry] = useState(true);
-    const navigation = useNavigation();
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const navigation = useNavigation();
 
   const validateEmail = (email) => {
-    // Vérifie si l'email contient un @ et au moins un caractère après
     return email.includes('@') && email.split('@')[1].length > 0;
   };
+
   const login = async () => {
     if (!email || !password) {
       Alert.alert('Veuillez entrer un email et un mot de passe');
       return;
     }
-  
+
     if (!validateEmail(email)) {
       Alert.alert('Veuillez entrer un email valide');
       return;
     }
-  
+
     setLoading(true);
-  
+
     try {
       const response = await axios.put('https://snapchat.epidoc.eu/user', {
         email,
         password,
       });
-  
+
       if (response.status === 200) {
         Alert.alert('Inscription réussie');
-        navigation.navigate('Camera');
+        navigation.navigate('Camera'); // Ensure this matches your navigator setup
       } else {
         Alert.alert('Erreur lors de la connexion', response.data.message || 'Une erreur est survenue.');
       }
@@ -65,67 +65,62 @@ const [secureTextEntry, setSecureTextEntry] = useState(true);
       setLoading(false);
     }
   };
-  
-  
-
-
-
 
   return (
     <View style={styles.container}>
-      <View style={styles.TopimageContainer}>
+      <View style={styles.topImageContainer}>
         <Image source={require('../asset/logintop.png')} style={styles.topImage} />
       </View>
       <View style={styles.helloContainer}>
         <Text style={styles.helloText}>Hello</Text>
       </View>
       <View>
-        <Text style={styles.signIntext}>Sign in to your account</Text>
+        <Text style={styles.signInText}>Sign in to your account</Text>
       </View>
       <View style={styles.inputContainer}>
         <FontAwesome name="user" size={30} color="#C8C8C8" style={styles.inputIcon} />
         <TextInput
-style={styles.textInput}
-                    placeholder="Email"
+          style={styles.textInput}
+          placeholder="Email"
           value={email}
           onChangeText={(text) => setEmail(text)}
         />
-</View>
+      </View>
       <View style={styles.inputContainer}>
         <FontAwesome name="lock" size={30} color="#C8C8C8" style={styles.inputIcon} />
-              <TextInput
-style={styles.textInput}
-                    placeholder="Password"
+        <TextInput
+          style={styles.textInput}
+          placeholder="Password"
           secureTextEntry={secureTextEntry}
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
-<TouchableOpacity onPress={() => setSecureTextEntry(!secureTextEntry)}>
+        <TouchableOpacity onPress={() => setSecureTextEntry(!secureTextEntry)}>
           <FontAwesome name={secureTextEntry ? "eye-slash" : "eye"} size={30} color="#C8C8C8" />
         </TouchableOpacity>
       </View>
-      <Text style={styles.forgotPasswordtext}>Forgot your password?</Text>
-              <TouchableOpacity style={styles.signInButtonContainer} onPress={login} disabled={loading}>
+      <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
+      <TouchableOpacity style={styles.signInButtonContainer} onPress={login} disabled={loading}>
         {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.signIn}>Sign in</Text>}
       </TouchableOpacity>
-<TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+      <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
         <Text style={styles.signupRedirect}>Don't have an account? Sign Up</Text>
       </TouchableOpacity>
       <View style={styles.linearGradient}>
         <Text style={styles.buttonText}>Sign in with Facebook</Text>
       </View>
-          </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-backgroundColor: '#fff',
-        alignItems: 'center',
+    backgroundColor: '#fff',
+    alignItems: 'center',
     justifyContent: 'center',
   },
-TopimageContainer: {
+  topImageContainer: {
     alignItems: 'center',
     marginBottom: 20,
   },
@@ -140,7 +135,7 @@ TopimageContainer: {
     fontSize: 24,
     fontWeight: 'bold',
   },
-  signIntext: {
+  signInText: {
     fontSize: 16,
     marginBottom: 20,
   },
@@ -158,11 +153,11 @@ TopimageContainer: {
     flex: 1,
     height: 40,
   },
-  forgotPasswordtext: {
+  forgotPasswordText: {
     color: '#C8C8C8',
     marginBottom: 20,
   },
-    signInButtonContainer: {
+  signInButtonContainer: {
     backgroundColor: '#4CAF50',
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -173,6 +168,20 @@ TopimageContainer: {
     color: '#fff',
     fontSize: 16,
   },
-  });
+  signupRedirect: {
+    color: '#4CAF50',
+    marginBottom: 20,
+  },
+  linearGradient: {
+    backgroundColor: '#3b5998',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+});
 
 export default LoginScreen;
