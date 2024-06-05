@@ -3,13 +3,13 @@ import { useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 
 
-export default function App() {
+export default function Camera() {
   const [facing, setFacing] = useState('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
   if (!permission) {
-    // Camera permissions are still loading.
+   
     return <View />;
   }
 
@@ -25,6 +25,7 @@ export default function App() {
       return <Text>No access to camera</Text>;
     }
 
+   
     return (
       <View style={styles.container}>
         <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
