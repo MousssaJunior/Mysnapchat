@@ -29,7 +29,7 @@ const SignupScreen = ({ navigation }) => {
 
         if (response.status === 200) {
           Alert.alert('Inscription réussie');
-          navigation.navigate('Login');
+          navigation.navigate('Camera');
         } else {
           Alert.alert('Erreur lors de l\'inscription', response.data.message || 'Une erreur est survenue.');
         }
