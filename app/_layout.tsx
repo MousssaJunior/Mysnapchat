@@ -12,8 +12,8 @@ const AppNavigator = () => {
   return (
     <NavigationContainer independent= {true} >
       <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Signup" component={SignupScreen} />
+        {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
+        {/* <Stack.Screen name="Signup" component={SignupScreen} /> */}
         <Stack.Screen name="Camera" component={CameraScreen} />
       </Stack.Navigator>
     </NavigationContainer>
