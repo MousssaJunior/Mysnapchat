@@ -6,8 +6,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import LoginScreen from '../src/scren/LoginScreen';
 import SignupScreen from '../src/scren/SignupScreen';
-import CameraScreen from '../src/scren/CameraScreen';
-import Chat from "../src/scren/Chat";
+// import CameraScreen from '../src/scren/CameraScreen';
+import Chat from '../src/scren/Chat'
 
 
 
@@ -24,10 +24,10 @@ const AppNavigator = () => {
  
       <Stack.Navigator initialRouteName="Login">
         {/*<Stack.Screen name="profile" component={profile} /> */}
-        {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
+        <Stack.Screen name="Login" component={LoginScreen} />
         {/* <Stack.Screen name="Signup" component={SignupScreen} /> */}
-        <Stack.Screen name="Camera" component={CameraScreen} />
-         <Stack.Screen name="Chat" component={Chat} />
+        {/* <Stack.Screen name="Camera" component={CameraScreen} /> */}
+         <Stack.Screen name="SendPage" component={Chat} />
 
       </Stack.Navigator>
     </NavigationContainer>
