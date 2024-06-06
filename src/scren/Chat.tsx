@@ -1,105 +1,156 @@
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
-import React, { useState, useEffect } from 'react';
+// import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+// import React, { useState, useEffect } from 'react';
 
-type User = {
-  _id: string;
-  username: string;
-  profilePicture: string;
-};
+// type User = {
+//   _id: string;
+//   username: string;
+//   profilePicture: string;
+// };
 
-export default function App() {
-  const [users, setUsers] = useState<User[]>([]);
+// type Snap = {
+//   _id: string;
+//   date: string;
+//   from: string;
+//   image: string;
+//   duration: number;
+// };
 
-  useEffect(() => {
-    fetch('https://snapchat.epidoc.eu/user', {
-      method: 'GET',
-      headers: {
-        'accept': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN5cGhheC5oYWRkb3VAZXBpdGVjaC5ldSIsImlkIjoiNjY1ZWRkNTg0NDVjMzMxYzllOWEwYTlmIiwiaWF0IjoxNzE3NDkzMTQyLCJleHAiOjE3MTc1Nzk1NDJ9.BHcqcDwbO0xYGKhWmcpSOmhRc_btxsQqm_IxQLUEnXw'
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data); 
-        setUsers(data.data || []);
-      })
-      .catch(error => console.error('Error fetching users:', error));
-  }, []);
+// export default function App() {
+//   const [snaps, setSnaps] = useState<Snap[]>([]);
+//   const [users, setUsers] = useState<User[]>([]);
 
-  if (users.length === 0) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
+//   useEffect(() => {
+//     const fetchUsers = async () => {
+//       try {
+//         const response = await fetch('https://snapchat.epidoc.eu/user', {
+//           method: 'GET',
+//           headers: {
+//             'accept': 'application/json',
+//             'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN5cGhheC5oYWRkb3VAZXBpdGVjaC5ldSIsImlkIjoiNjY1ZWRkNTg0NDVjMzMxYzllOWEwYTlmIiwiaWF0IjoxNzE3NDkzMTQyLCJleHAiOjE3MTc1Nzk1NDJ9.BHcqcDwbO0xYGKhWmcpSOmhRc_btxsQqm_IxQLUEnXw'
+//           },
+//         });
 
-  return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>LES UTLISATEURS</Text>
-      {users.map(user => (
-        <View key={user._id} style={styles.userContainer}>
-          <Text style={styles.label}>ID:</Text>
-          <Text style={styles.value}>{user._id}</Text>
-          <Text style={styles.label}>Username:</Text>
-          <Text style={styles.value}>{user.username}</Text>
-          {user.profilePicture ? (
-            <Image
-              source={{ uri: user.profilePicture }}
-              style={styles.profilePicture}
-            />
-          ) : (
-            <Text style={styles.noProfilePicture}>No profile picture</Text>
-          )}
-        </View>
-      ))}
-    </ScrollView>
-  );
-}
+//         if (!response.ok) {
+//           throw new Error(`HTTP error! status: ${response.status}`);
+//         }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  header: {
-    fontSize: 24,
-    marginBottom: 16,
-    textAlign: 'center',
-  },
+//         const data = await response.json();
+//         setUsers(data.data || []);
+//       } catch (error) {
+//         console.error('Error fetching users:', error);
+//       }
+//     };
 
-  userContainer: {
-    marginBottom: 16,
-    padding: 16,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-  },
+//     const fetchSnaps = async () => {
+//       try {
+//         const response = await fetch('https://snapchat.epidoc.eu/snap', {
+//           method: 'GET',
+//           headers: {
+//             'accept': 'application/json',
+//             'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN5cGhheC5oYWRkb3VAZXBpdGVjaC5ldSIsImlkIjoiNjY1ZWRkNTg0NDVjMzMxYzllOWEwYTlmIiwiaWF0IjoxNzE3NDkzMTQyLCJleHAiOjE3MTc1Nzk1NDJ9.BHcqcDwbO0xYGKhWmcpSOmhRc_btxsQqm_IxQLUEnXw'
+//           },
+//         });
 
-  label: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
+//         if (!response.ok) {
+//           throw new Error(`HTTP error! status: ${response.status}`);
+//         }
 
-  value: {
-    fontSize: 18,
-    marginBottom: 8,
-  },
+//         const data = await response.json();
+//         const snapDetails = await Promise.all(data.map(async (snap: Snap) => {
+//           const snapResponse = await fetch(`https://snapchat.epidoc.eu/snap${snap._id}`, {
+//             method: 'GET',
+//             headers: {
+//               'accept': 'application/json',
+//               'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN5cGhheC5oYWRkb3VAZXBpdGVjaC5ldSIsImlkIjoiNjY1ZWRkNTg0NDVjMzMxYzllOWEwYTlmIiwiaWF0IjoxNzE3NDkzMTQyLCJleHAiOjE3MTc1Nzk1NDJ9.BHcqcDwbO0xYGKhWmcpSOmhRc_btxsQqm_IxQLUEnXw'
+//             },
+//           });
 
-  profilePicture: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginTop: 16,
-  },
+//           const snapData = await snapResponse.json();
+//           return { ...snap, ...snapData };
+//         }));
 
-  noProfilePicture: {
-    fontSize: 18,
-    marginTop: 16,
-    color: 'gray',
-  },
-  
-});
+//         setSnaps(snapDetails);
+//       } catch (error) {
+//         console.error('Error fetching snaps:', error);
+//       }
+//     };
+
+//     fetchUsers();
+//     fetchSnaps();
+//   }, []);
+
+//   if (snaps.length === 0) {
+//     return (
+//       <View style={styles.container}>
+//         <Text>Loading...</Text>
+//       </View>
+//     );
+//   }
+
+//   const getUserName = (userId: string) => {
+//     const user = users.find(user => user._id === userId);
+//     return user ? user.username : 'Unknown';
+//   };
+
+//   return (
+//     <ScrollView style={styles.container}>
+//       <Text style={styles.header}>SNAPS REÇUS</Text>
+//       {snaps.map(snap => (
+//         <View key={snap._id} style={styles.snapContainer}>
+//           <Text style={styles.label}>De:</Text>
+//           <Text style={styles.value}>{getUserName(snap.from)}</Text>
+//           <Text style={styles.label}>Date:</Text>
+//           <Text style={styles.value}>{new Date(snap.date).toLocaleString()}</Text>
+//           <Text style={styles.label}>Durée:</Text>
+//           <Text style={styles.value}>{snap.duration} minutes</Text>
+//           {snap.image ? (
+//             <Image source={{ uri: snap.image }} style={styles.snapImage}/>
+//           ) : (
+//             <Text style={styles.noImage}>No image</Text>
+//           )}
+//         </View>
+//       ))}
+//     </ScrollView>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     padding: 16,
+//   },
+//   header: {
+//     fontSize: 24,
+//     marginBottom: 16,
+//     textAlign: 'center',
+//   },
+//   snapContainer: {
+//     marginBottom: 16,
+//     padding: 16,
+//     backgroundColor: '#f9f9f9',
+//     borderRadius: 8,
+//     shadowColor: '#000',
+//     shadowOpacity: 0.1,
+//     shadowRadius: 4,
+//     shadowOffset: { width: 0, height: 2 },
+//   },
+//   label: {
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//   },
+//   value: {
+//     fontSize: 18,
+//     marginBottom: 8,
+//   },
+//   snapImage: {
+//     width: 100,
+//     height: 100,
+//     borderRadius: 50,
+//     marginTop: 16,
+//   },
+//   noImage: {
+//     fontSize: 18,
+//     marginTop: 16,
+//     color: 'gray',
+//   },
+// });
