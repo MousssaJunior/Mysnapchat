@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import { useNavigation } from '@react-navigation/native'; 
 
 export default function Camera() {
   const [facing, setFacing] = useState('back');
@@ -8,11 +9,20 @@ export default function Camera() {
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
 
+  const navigation = useNavigation(); 
+
+
+
+  
+  
   const takePicture = async () => {
     if (camera) {
       const data = await camera.takePictureAsync(null);
       setImage(data.uri);
     }
+  };
+  const goToNewPage = () => {
+    navigation.navigate('Option');
   };
 
   const deletePicture = () => {
@@ -39,6 +49,9 @@ export default function Camera() {
   return (
     <View style={styles.container}>
       <CameraView style={styles.camera} facing={facing} ref={ref => setCamera(ref)}>
+        <TouchableOpacity style={styles.buttonop} onPress={goToNewPage}>
+        <Text style={styles.buttonTextop}>Option</Text>
+      </TouchableOpacity>
         <View style={styles.overlay}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
@@ -116,4 +129,26 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
+  buttonop: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  buttonTextop: {
+    color: '#fff',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    fontSize: 16,
+    textAlign: 'center',
+  },
 });
+
