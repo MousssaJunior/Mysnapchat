@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// Importez useState et useEffect
+import React, { useState, useEffect } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native'; 
@@ -8,21 +9,35 @@ export default function Camera() {
   const [permission, requestPermission] = useCameraPermissions();
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
-
   const navigation = useNavigation(); 
-
-
-
   
-  
+  // Utilisez useEffect pour vérifier quand l'image change
+  useEffect(() => {
+    
+    navigation.setOptions({
+      headerRight: () => (
+        image && (
+          <TouchableOpacity style={styles.buttonop} onPress={goToSendPage}>
+            <Text style={styles.buttonTextop}>Envoyer</Text>
+          </TouchableOpacity>
+        )
+      )
+    });
+  }, [image]); 
+
   const takePicture = async () => {
     if (camera) {
       const data = await camera.takePictureAsync(null);
       setImage(data.uri);
     }
   };
+
   const goToNewPage = () => {
     navigation.navigate('Option');
+  };
+
+  const goToSendPage = () => {
+    navigation.navigate('SendPage', { image }); 
   };
 
   const deletePicture = () => {
@@ -50,8 +65,8 @@ export default function Camera() {
     <View style={styles.container}>
       <CameraView style={styles.camera} facing={facing} ref={ref => setCamera(ref)}>
         <TouchableOpacity style={styles.buttonop} onPress={goToNewPage}>
-        <Text style={styles.buttonTextop}>Option</Text>
-      </TouchableOpacity>
+          <Text style={styles.buttonTextop}>Option</Text>
+        </TouchableOpacity>
         <View style={styles.overlay}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
@@ -98,10 +113,9 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: 'rgba(0,0,0,0.6)',
     padding: 10,
-    marginTop:500,
     marginHorizontal: 10,
     borderRadius: 5,
-   
+    marginTop:500,
   },
   deleteButton: {
     position: 'absolute',
@@ -113,7 +127,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 18,
-
   },
   permissionText: {
     textAlign: 'center',
@@ -151,4 +164,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
