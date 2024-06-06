@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
-export default function ProfileView({ navigation }) {
+export default function ProfileView:({ navigation }) {
   const handleLogout = async () => {
     try {
     
