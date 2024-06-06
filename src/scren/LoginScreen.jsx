@@ -4,6 +4,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
+
+
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -36,7 +38,7 @@ const LoginScreen = () => {
 
       if (response.status === 200) {
         Alert.alert('Inscription réussie');
-        navigation.navigate('Camera'); // Ensure this matches your navigator setup
+        navigation.navigate('Camera');
       } else {
         Alert.alert('Erreur lors de la connexion', response.data.message || 'Une erreur est survenue.');
       }
