@@ -2,21 +2,29 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import LoginScreen from '../src/scren/LoginScreen';
 import SignupScreen from '../src/scren/SignupScreen';
+
 import CameraScreen from '../src/scren/CameraScreen';
+import Chat from '../src/scren/Chat'
+
+
+
 import galerie from '../src/scren/galerie';
 
+import userpp from '../src/screen/userpp';
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
   return (
+
     <NavigationContainer independent= {true} >
+ 
       <Stack.Navigator initialRouteName="Login">
         {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
         {/* <Stack.Screen name="Signup" component={SignupScreen} /> */}
-        {/* <Stack.Screen name="Camera" component={CameraScreen} /> */}
-        <Stack.Screen name="galerie" component={galerie} />
+        <Stack.Screen name="Camera" component={CameraScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

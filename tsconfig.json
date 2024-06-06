@@ -13,5 +13,14 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
+<<<<<<< HEAD
 , "components/camera.jsx", "src/scren/CameraScreen.jsx", "src/scren/galerie.jsx"  ]
+=======
+
+, "components/camera.jsx", "src/scren/Chat.jsx"  ]
+
+, "components/camera.jsx", "src/scren/CameraScreen.jsx"  ]
+
+
+>>>>>>> 0c063c5d9cca785ccf79d6ebcc7d98b4beb6ca10
 }
