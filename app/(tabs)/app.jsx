@@ -1,9 +1,17 @@
-// App.js
-import React from 'react';
-import _layout from './_layout'; // ajustez le chemin si nécessaire
 
-const App = () => {
-  return <_layout />;
-};
+import * as ImagePicker from 'expo-image-picker'; 
 
-export default App;
+export default function App() {
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      console.log(result);
+    } else {
+      alert('You did not select any image.');
+    }
+  };
+}
