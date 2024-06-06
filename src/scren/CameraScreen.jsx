@@ -11,7 +11,6 @@ export default function Camera() {
   const [image, setImage] = useState(null);
   const navigation = useNavigation(); 
   
-  // Utilisez useEffect pour vérifier quand l'image change
   useEffect(() => {
     
     navigation.setOptions({
