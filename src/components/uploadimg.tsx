@@ -53,7 +53,6 @@ const imageUploaderStyles = StyleSheet.create({
     backgroundColor: '#efefef',
     position: 'relative',
     bottom: 296,
-    borderRadius: 999,
     overflow: 'hidden',
     marginLeft: 130,
   },
