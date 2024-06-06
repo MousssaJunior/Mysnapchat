@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
-
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -22,23 +21,28 @@ const LoginScreen = () => {
       Alert.alert('Veuillez entrer un email et un mot de passe');
       return;
     }
-
+  
     if (!validateEmail(email)) {
       Alert.alert('Veuillez entrer un email valide');
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
       const response = await axios.put('https://snapchat.epidoc.eu/user', {
         email,
         password,
       });
-
+  
       if (response.status === 200) {
-        Alert.alert('Inscription réussie');
-        navigation.navigate('Camera');
+        if (response.data.data.token) { 
+          await AsyncStorage.setItem('token', response.data.data.token);
+          Alert.alert('Inscription réussie');
+          navigation.navigate('Camera');
+        } else {
+          Alert.alert('Erreur lors de la connexion', 'Le jeton d\'authentification est manquant dans la réponse.');
+        }
       } else {
         Alert.alert('Erreur lors de la connexion', response.data.message || 'Une erreur est survenue.');
       }
@@ -67,8 +71,10 @@ const LoginScreen = () => {
       setLoading(false);
     }
   };
+  
 
   return (
+   
     <View style={styles.container}>
       <View style={styles.topImageContainer}>
         <Image source={require('../asset/logintop.png')} style={styles.topImage} />
@@ -114,6 +120,7 @@ const LoginScreen = () => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

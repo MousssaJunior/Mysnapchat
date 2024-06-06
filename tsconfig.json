@@ -14,7 +14,7 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
 
-, "components/camera.jsx", "src/scren/Chat.jsx"  ]
+, "components/camera.jsx", "src/scren/Chat.jsx"  
 
 , "components/camera.jsx", "src/scren/CameraScreen.jsx"  ]
 

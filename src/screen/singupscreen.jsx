@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView 
 import React, { useState } from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { launchImageLibrary } from 'react-native-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Importez AsyncStorage depuis le bon emplacement
 
 const SignupScreen = ({ navigation }) => {
   const [profileImage, setProfileImage] = useState(null);

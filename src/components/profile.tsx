@@ -1,14 +1,25 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
-export default function ProfileView() {
+export default function ProfileView({ navigation }) {
+  const handleLogout = async () => {
+    try {
+    
+      await AsyncStorage.removeItem('token');
+ 
+      navigation.navigate('Camera');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
           <Image
             style={styles.avatar}
-           
           />
           <Text style={styles.name}>unknow</Text>
         </View>
@@ -27,8 +38,8 @@ export default function ProfileView() {
 
       <View style={styles.body}>
         <View style={styles.bodyContent}>
-          <TouchableOpacity style={styles.buttonContainer}>
-            <Text>button test</Text>
+          <TouchableOpacity style={styles.buttonContainer} onPress={handleLogout}>
+            <Text>Logout</Text>
           </TouchableOpacity>
           <Text style={styles.description}>
             Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis,
@@ -39,8 +50,6 @@ export default function ProfileView() {
     </View>
   );
 }
-
-
 
 const styles = StyleSheet.create({
   header: {
@@ -111,4 +120,4 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: 'center',
   },
-})
+});
