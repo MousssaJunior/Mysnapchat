@@ -5,7 +5,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import LoginScreen from '../src/scren/LoginScreen';
 import SignupScreen from '../src/scren/SignupScreen';
+
 import CameraScreen from '../src/scren/CameraScreen';
+import Chat from '../src/scren/Chat'
+
+
 
 
 import userpp from '../src/screen/userpp';
@@ -21,6 +25,8 @@ const AppNavigator = () => {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="Camera" component={CameraScreen} />
+        <Stack.Screen name="SendPage" component={Chat} />
+
 
       </Stack.Navigator>
     </NavigationContainer>
