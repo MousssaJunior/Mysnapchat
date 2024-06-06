@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import { useNavigation } from '@react-navigation/native'; 
 
 export default function Camera() {
   const [facing, setFacing] = useState('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
+
+  const navigation = useNavigation(); 
+
+
+
+  const goToNewPage = () => {
+    navigation.navigate('NouvellePage');
+  };
+
 
   const takePicture = async () => {
     if (camera) {
@@ -40,6 +50,9 @@ export default function Camera() {
     <View style={styles.container}>
       <CameraView style={styles.camera} facing={facing} ref={ref => setCamera(ref)}>
         <View style={styles.overlay}>
+        <TouchableOpacity style={styles.button} onPress={goToNewPage}>
+        <Text style={styles.buttonText}>Aller à la nouvelle page</Text>
+      </TouchableOpacity>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
               <Text style={styles.buttonText}>Changer de caméra</Text>
@@ -117,3 +130,4 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
 });
+
