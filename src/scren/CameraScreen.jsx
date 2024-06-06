@@ -1,29 +1,31 @@
-// Importez useState et useEffect
 import React, { useState, useEffect } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { useNavigation } from '@react-navigation/native'; 
+import { useNavigation } from '@react-navigation/native';
 
 export default function Camera() {
   const [facing, setFacing] = useState('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
-  const navigation = useNavigation(); 
-  
-  // Utilisez useEffect pour vérifier quand l'image change
+  const navigation = useNavigation();
+
   useEffect(() => {
-    
     navigation.setOptions({
       headerRight: () => (
-        image && (
-          <TouchableOpacity style={styles.buttonop} onPress={goToSendPage}>
-            <Text style={styles.buttonTextop}>Envoyer</Text>
+        <View style={styles.headerButtons}>
+          <TouchableOpacity style={styles.headerButton} onPress={goToNewPage}>
+            <Text style={styles.headerButtonText}>Option</Text>
           </TouchableOpacity>
-        )
-      )
+          {image && (
+            <TouchableOpacity style={styles.headerButton} onPress={goToSendPage}>
+              <Text style={styles.headerButtonText}>Envoyer</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      ),
     });
-  }, [image]); 
+  }, [image, navigation]);
 
   const takePicture = async () => {
     if (camera) {
@@ -37,7 +39,7 @@ export default function Camera() {
   };
 
   const goToSendPage = () => {
-    navigation.navigate('SendPage', { image }); 
+    navigation.navigate('SendPage', { image });
   };
 
   const deletePicture = () => {
@@ -58,15 +60,12 @@ export default function Camera() {
   }
 
   function toggleCameraFacing() {
-    setFacing(current => (current === 'back' ? 'front' : 'back'));
+    setFacing((current) => (current === 'back' ? 'front' : 'back'));
   }
 
   return (
     <View style={styles.container}>
-      <CameraView style={styles.camera} facing={facing} ref={ref => setCamera(ref)}>
-        <TouchableOpacity style={styles.buttonop} onPress={goToNewPage}>
-          <Text style={styles.buttonTextop}>Option</Text>
-        </TouchableOpacity>
+      <CameraView style={styles.camera} facing={facing} ref={(ref) => setCamera(ref)}>
         <View style={styles.overlay}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
@@ -115,7 +114,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginHorizontal: 10,
     borderRadius: 5,
-    marginTop:500,
+    marginTop: 500,
   },
   deleteButton: {
     position: 'absolute',
@@ -142,25 +141,17 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
-  buttonop: {
-    backgroundColor: '#4CAF50',
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+  headerButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  buttonTextop: {
-    color: '#fff',
+  headerButton: {
+    marginRight: 10,
+  },
+  headerButtonText: {
+    color: '#4CAF50',
     fontWeight: 'bold',
-    textTransform: 'uppercase',
     fontSize: 16,
-    textAlign: 'center',
   },
 });
+

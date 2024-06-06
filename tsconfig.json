@@ -17,7 +17,7 @@
 , "components/camera.jsx", "src/scren/CameraScreen.jsx", "src/scren/galerie.jsx"  ]
 =======
 
-, "components/camera.jsx", "src/scren/Chat.jsx"  ]
+, "components/camera.jsx", "src/scren/Chat.jsx"  
 
 , "components/camera.jsx", "src/scren/CameraScreen.jsx"  ]
 
