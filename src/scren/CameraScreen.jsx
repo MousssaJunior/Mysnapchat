@@ -13,16 +13,16 @@ export default function Camera() {
 
 
 
-  const goToNewPage = () => {
-    navigation.navigate('NouvellePage');
-  };
-
-
+  
+  
   const takePicture = async () => {
     if (camera) {
       const data = await camera.takePictureAsync(null);
       setImage(data.uri);
     }
+  };
+  const goToNewPage = () => {
+    navigation.navigate('Option');
   };
 
   const deletePicture = () => {
@@ -49,10 +49,10 @@ export default function Camera() {
   return (
     <View style={styles.container}>
       <CameraView style={styles.camera} facing={facing} ref={ref => setCamera(ref)}>
-        <View style={styles.overlay}>
-        <TouchableOpacity style={styles.button} onPress={goToNewPage}>
-        <Text style={styles.buttonText}>Aller à la nouvelle page</Text>
+        <TouchableOpacity style={styles.buttonop} onPress={goToNewPage}>
+        <Text style={styles.buttonTextop}>Option</Text>
       </TouchableOpacity>
+        <View style={styles.overlay}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
               <Text style={styles.buttonText}>Changer de caméra</Text>
@@ -128,6 +128,27 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
+  },
+  buttonop: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  buttonTextop: {
+    color: '#fff',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 
