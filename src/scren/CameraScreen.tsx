@@ -91,7 +91,7 @@ export default function Camera() {
               <Text style={styles.buttonText}>Prendre une photo</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={addImage}>
-              <Text style={styles.buttonText}>G</Text>
+              <Text style={styles.buttonText}>Galerie</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
+    flex:wa
   },
   buttonContainer: {
     flexDirection: 'row',
