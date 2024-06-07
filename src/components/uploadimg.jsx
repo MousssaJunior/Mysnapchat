@@ -15,9 +15,7 @@ export function UploadImage() {
     }
   };
 
-  useEffect(() => {
-    checkForCameraRollPermission();
-  }, []);
+
 
   const addImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
