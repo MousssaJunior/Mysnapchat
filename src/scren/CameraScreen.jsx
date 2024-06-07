@@ -28,12 +28,14 @@ export default function Camera() {
     });
   }, [image, navigation]);
 
+
   const takePicture = async () => {
-    if (camera) {
-      const data = await camera.takePictureAsync>(null);
-      setImage(data.uri);
+    if(camera){
+        const data = await camera.takePictureAsync(null)
+        setImage(data.uri);
     }
-  };
+  }
+
 
 
 
@@ -91,7 +93,7 @@ export default function Camera() {
               <Text style={styles.buttonText}>Prendre une photo</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={addImage}>
-              <Text style={styles.buttonText}>G</Text>
+              <Text style={styles.buttonText}>Galerie</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -122,6 +124,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
+    flexWrap:'wrap'
   },
   buttonContainer: {
     flexDirection: 'row',
