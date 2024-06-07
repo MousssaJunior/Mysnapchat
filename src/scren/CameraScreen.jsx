@@ -28,12 +28,14 @@ export default function Camera() {
     });
   }, [image, navigation]);
 
+
   const takePicture = async () => {
-    if (camera) {
-      const data = await camera.takePictureAsync>(null);
-      setImage(data.uri);
+    if(camera){
+        const data = await camera.takePictureAsync(null)
+        setImage(data.uri);
     }
-  };
+  }
+
 
 
 
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
-    flex:wa
+    flexWrap:'wrap'
   },
   buttonContainer: {
     flexDirection: 'row',
