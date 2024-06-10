@@ -30,7 +30,7 @@ const LoginScreen = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('https://snapchat.epidoc.eu/user', {
+      const response = await axios.put('https://snapchat.epidoc.eu/user', {
         email,
         password,
       }, {
