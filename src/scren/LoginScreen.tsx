@@ -21,22 +21,26 @@ const LoginScreen = () => {
       Alert.alert('Veuillez entrer un email et un mot de passe');
       return;
     }
-  
+
     if (!validateEmail(email)) {
       Alert.alert('Veuillez entrer un email valide');
       return;
     }
-  
+
     setLoading(true);
-  
+
     try {
-      const response = await axios.put('https://snapchat.epidoc.eu/user', {
+      const response = await axios.post('https://snapchat.epidoc.eu/user', {
         email,
         password,
+      }, {
+        headers: {
+          " X-API-Key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI"
+        }
       });
-  
+
       if (response.status === 200) {
-        if (response.data.data.token) { 
+        if (response.data.data.token) {
           await AsyncStorage.setItem('token', response.data.data.token);
           Alert.alert('Inscription réussie');
           navigation.navigate('Camera');
@@ -71,10 +75,10 @@ const LoginScreen = () => {
       setLoading(false);
     }
   };
-  
+
 
   return (
-   
+
     <View style={styles.container}>
       <View style={styles.topImageContainer}>
         <Image source={require('../asset/logintop.png')} style={styles.topImage} />
