@@ -25,7 +25,10 @@ const SignupScreen = ({ navigation }) => {
           username,
           profilePicture,
           password,
-        });
+        },{
+            headers:{
+           " X-API-Key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI"
+        }});
 
         if (response.status === 200) {
           Alert.alert('Inscription réussie');
