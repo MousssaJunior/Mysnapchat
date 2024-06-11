@@ -61,7 +61,8 @@ export default function Camera() {
   };
 
   const goToSendPage = () => {
-    navigation.navigate('SendPage', { image });
+    navigation.navigate('Chat', { image });
+    
   };
 
 
