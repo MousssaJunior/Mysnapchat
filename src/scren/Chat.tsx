@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 
-export default function SendPage() {
+export default function Chat() {
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -12,7 +12,9 @@ export default function SendPage() {
           method: 'GET',
           headers: {
             'accept': 'application/json',
-            'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3Q2NkBnbWFpbC5jb20iLCJpZCI6IjY2NWZiNDE5NDQ1YzMzMWM5ZTlhMGFmYSIsImlhdCI6MTcxNzY4NDIyNSwiZXhwIjoxNzE3NzcwNjI1fQ.hume3qN1tnctgTuZyzB7w87nqVEdK9kAw7SmxDJLycA'},
+            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3Q2NkBnbWFpbC5jb20iLCJpZCI6IjY2NWZiNDE5NDQ1YzMzMWM5ZTlhMGFmYSIsImlhdCI6MTcxNzY4NDIyNSwiZXhwIjoxNzE3NzcwNjI1fQ.hume3qN1tnctgTuZyzB7w87nqVEdK9kAw7SmxDJLycA',
+            "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0"
+          },
         });
 
         if (!response.ok) {

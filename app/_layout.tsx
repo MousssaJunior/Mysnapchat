@@ -27,6 +27,9 @@ const AppNavigator = () => {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="Camera" component={CameraScreen} />
+        <Stack.Screen name="Chat" component={Chat
+          
+        } />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -3,6 +3,7 @@ import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-n
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
+import Chat from './Chat';
 
 export default function Camera() {
   const [facing, setFacing] = useState('back');
@@ -57,7 +58,8 @@ export default function Camera() {
   };
 
   const goToSendPage = () => {
-    navigation.navigate('SendPage', { image });
+    navigation.navigate('Chat', { image });
+    
   };
 
   const deletePicture = () => {
