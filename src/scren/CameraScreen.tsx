@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { Button, StyleSheet, Text, TouchableOpacity, View, Image,Touchable } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
+import {AsyncStorage} from 'react-native';
 
 export default function Camera() {
   const [facing, setFacing] = useState('back');
@@ -33,6 +34,8 @@ export default function Camera() {
     if(camera){
         const data = await camera.takePictureAsync(null)
         setImage(data.uri);
+        await AsyncStorage.setItem(data
+        );
     }
   }
 
@@ -45,6 +48,7 @@ export default function Camera() {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+     
     });
 
     if (!result.canceled) {
@@ -59,6 +63,7 @@ export default function Camera() {
   const goToSendPage = () => {
     navigation.navigate('SendPage', { image });
   };
+
 
   const deletePicture = () => {
     setImage(null);
