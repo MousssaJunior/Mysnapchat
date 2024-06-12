@@ -1,47 +1,61 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, ScrollView, ActivityIndicator } from 'react-native';
+import axios from 'axios';
 
-export default function Chat() {
-  const [friends, setFriends] = useState([]);
+const Chat = () => {
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchFriends = async () => {
+    const fetchUsers = async () => {
       try {
-        const response = await fetch('https://snapchat.epidoc.eu/user/friends', {
-          method: 'GET',
+        const response = await axios.get('https://snapchat.epidoc.eu/user', {
           headers: {
-            'accept': 'application/json',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3Q2NkBnbWFpbC5jb20iLCJpZCI6IjY2NWZiNDE5NDQ1YzMzMWM5ZTlhMGFmYSIsImlhdCI6MTcxNzY4NDIyNSwiZXhwIjoxNzE3NzcwNjI1fQ.hume3qN1tnctgTuZyzB7w87nqVEdK9kAw7SmxDJLycA',
-            "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0"
-          },
+            // "authorization" : `Bearer ${token}`
+            "Authorization": " Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3Q2NkBnbWFpbC5jb20iLCJpZCI6IjY2NjZjOWY0MDg2MmUyOWRlZjQzMWE4MiIsImlhdCI6MTcxODExODM3NiwiZXhwIjoxNzE4MjA0Nzc2fQ.nUncSLb8DzHntxU6PvdfUKLBAlxQiqwT8OOzsp_QjZo",
+            "X-API-Key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI"
+          }
         });
 
-        if (!response.ok) {
+        if (response.status !== 200) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json();
-        setFriends(data.data || []);
+        setUsers(response.data.data || []);
       } catch (error) {
-        console.error('Error fetching friends:', error);
+        console.log('Error response:', error.response ? error.response.data : error.message);
+        let errorMessage = 'Une erreur est survenue.';
+        if (error.response && error.response.data.message) {
+          switch (error.response.data.message) {
+            case 'user not found':
+              errorMessage = 'Utilisateur non trouvé';
+              break;
+            case 'credentials are bad':
+              errorMessage = 'Les identifiants sont incorrects';
+              break;
+            default:
+              errorMessage = error.response.data.message;
+          }
+        }
+        Alert.alert('Erreur', errorMessage);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchFriends();
+    fetchUsers();
   }, []);
 
   if (loading) {
     return (
       <View style={styles.container}>
         <Text>En cours...</Text>
+        <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
   }
 
-  if (friends.length === 0) {
+  if (users.length === 0) {
     return (
       <View style={styles.container}>
         <Text>Vous n'avez pas d'ami</Text>
@@ -52,19 +66,20 @@ export default function Chat() {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.header}>MES AMIS</Text>
-      {friends.map(friend => (
-        <View key={friend._id} style={styles.friendContainer}>
-          <Text style={styles.username}>{friend.username}</Text>
+      {users.map(user => (
+        <View key={user._id} style={styles.friendContainer}>
+          <Text style={styles.username}>{user.username}</Text>
         </View>
       ))}
     </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#fff',
   },
   header: {
     fontSize: 24,
@@ -86,3 +101,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+export default Chat;
