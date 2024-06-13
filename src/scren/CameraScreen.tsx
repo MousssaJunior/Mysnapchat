@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { Button, StyleSheet, Text, TouchableOpacity, View, Image,Touchable } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import Chat from './Chat';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as RNFS from '@dr.pogodin/react-native-fs';
+
+
+
 
 export default function Camera() {
   const [facing, setFacing] = useState('back');
@@ -33,6 +37,8 @@ export default function Camera() {
     });
   }, [image, navigation]);
 
+  
+
 
   const takePicture = async () => {
     if(camera){
@@ -50,6 +56,7 @@ export default function Camera() {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+     
     });
 
     if (!result.canceled) {
@@ -68,6 +75,7 @@ export default function Camera() {
     navigation.navigate('Chat', { image });
     
   };
+
 
   const deletePicture = () => {
     setImage(null);
