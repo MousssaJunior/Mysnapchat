@@ -18,7 +18,7 @@ const Chat = () => {
       try {
         const response = await axios.get('https://snapchat.epidoc.eu/user', {
           headers: {
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3Q2NkBnbWFpbC5jb20iLCJpZCI6IjY2NjZjOWY0MDg2MmUyOWRlZjQzMWE4MiIsImlhdCI6MTcxODExODM3NiwiZXhwIjoxNzE4MjA0Nzc2fQ.nUncSLb8DzHntxU6PvdfUKLBAlxQiqwT8OOzsp_QjZo",
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3Q2NkBnbWFpbC5jb20iLCJpZCI6IjY2NjZjOWY0MDg2MmUyOWRlZjQzMWE4MiIsImlhdCI6MTcxODI3MDc1NSwiZXhwIjoxNzE4MzU3MTU1fQ.zkLS2m_FycxBb7uJXA0z4Yi_zF0PfzwOJFQ5MOF3tG8",
             "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI"
           }
         });
@@ -81,8 +81,8 @@ const Chat = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3Q2NkBnbWFpbC5jb20iLCJpZCI6IjY2NjZjOWY0MDg2MmUyOWRlZjQzMWE4MiIsImlhdCI6MTcxODExODM3NiwiZXhwIjoxNzE4MjA0Nzc2fQ.nUncSLb8DzHntxU6PvdfUKLBAlxQiqwT8OOzsp_QjZo",
-          "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0",
+          'Authorization': "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3Q2NkBnbWFpbC5jb20iLCJpZCI6IjY2NjZjOWY0MDg2MmUyOWRlZjQzMWE4MiIsImlhdCI6MTcxODI3MDc1NSwiZXhwIjoxNzE4MzU3MTU1fQ.zkLS2m_FycxBb7uJXA0z4Yi_zF0PfzwOJFQ5MOF3tG8",
+          "x-api-key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0",
         },
         body: JSON.stringify(formData),
       });
