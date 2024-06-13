@@ -10,7 +10,22 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [rememberMe, setRememberMe] = useState(false);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const loadRememberedCredentials = async () => {
+      const savedEmail = await AsyncStorage.getItem('email');
+      const savedPassword = await AsyncStorage.getItem('password');
+      if (savedEmail && savedPassword) {
+        setEmail(savedEmail);
+        setPassword(savedPassword);
+        setRememberMe(true);
+      }
+    };
+
+    loadRememberedCredentials();
+  }, []);
 
   const validateEmail = (email) => {
     return email.includes('@') && email.split('@')[1].length > 0;
@@ -35,14 +50,21 @@ const LoginScreen = () => {
         password,
       }, {
         headers: {
-          " X-API-Key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI"
+          "X-API-Key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0"
         }
       });
 
       if (response.status === 200) {
         if (response.data.data.token) {
           await AsyncStorage.setItem('token', response.data.data.token);
-          Alert.alert('Inscription réussie');
+          if (rememberMe) {
+            await AsyncStorage.setItem('email', email);
+            await AsyncStorage.setItem('password', password);
+          } else {
+            await AsyncStorage.removeItem('email');
+            await AsyncStorage.removeItem('password');
+          }
+          Alert.alert('Connexion réussie');
           navigation.navigate('Camera');
         } else {
           Alert.alert('Erreur lors de la connexion', 'Le jeton d\'authentification est manquant dans la réponse.');
@@ -76,15 +98,13 @@ const LoginScreen = () => {
     }
   };
 
-
   return (
-
     <View style={styles.container}>
       <View style={styles.topImageContainer}>
         <Image source={require('../asset/logintop.png')} style={styles.topImage} />
       </View>
       <View style={styles.helloContainer}>
-        <Text style={styles.helloText}>Hello</Text>
+        <Text style={styles.helloText}>MY-SNAP</Text>
       </View>
       <View>
         <Text style={styles.signInText}>Sign in to your account</Text>
@@ -111,6 +131,13 @@ const LoginScreen = () => {
           <FontAwesome name={secureTextEntry ? "eye-slash" : "eye"} size={30} color="#C8C8C8" />
         </TouchableOpacity>
       </View>
+      {/* <View style={styles.rememberMeContainer}>
+        <CheckBox
+          value={rememberMe}
+          onValueChange={setRememberMe}
+        />
+        <Text style={styles.rememberMeText}>Se souvenir de moi</Text>
+      </View> */}
       <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
       <TouchableOpacity style={styles.signInButtonContainer} onPress={login} disabled={loading}>
         {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.signIn}>Sign in</Text>}
@@ -124,7 +151,6 @@ const LoginScreen = () => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -169,6 +195,15 @@ const styles = StyleSheet.create({
   forgotPasswordText: {
     color: '#C8C8C8',
     marginBottom: 20,
+  },
+  rememberMeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  rememberMeText: {
+    marginLeft: 10,
+    color: '#C8C8C8',
   },
   signInButtonContainer: {
     backgroundColor: '#4CAF50',
