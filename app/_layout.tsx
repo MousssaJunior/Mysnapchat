@@ -5,15 +5,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import LoginScreen from '../src/scren/LoginScreen';
 import SignupScreen from '../src/scren/SignupScreen';
-
 import CameraScreen from '../src/scren/CameraScreen';
 import Chat from '../src/scren/Chat'
-
-
-
-import galerie from '../src/scren/galerie';
-
 import userpp from '../src/screen/userpp';
+import crud from '../src/scren/crud'
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
@@ -27,9 +22,8 @@ const AppNavigator = () => {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="Camera" component={CameraScreen} />
-        <Stack.Screen name="Chat" component={Chat
-          
-        } />
+        <Stack.Screen name="Chat" component={Chat} />
+        {/* <Stack.Screen name="crud" component={crud} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

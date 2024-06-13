@@ -34,6 +34,9 @@ export default function ProfileView({ navigation }) {
           <Text style={styles.title}>Following</Text>
           <Text style={styles.count}>200</Text>
         </View>
+        <TouchableOpacity style={styles.buttonContainer}>
+            <Text>CRUD</Text>
+          </TouchableOpacity>
       </View>
 
       <View style={styles.body}>
@@ -45,6 +48,7 @@ export default function ProfileView({ navigation }) {
             Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis,
             omittam deseruisse consequuntur ius an,
           </Text>
+          
         </View>
       </View>
     </View>
