@@ -19,6 +19,10 @@ export default function Camera() {
           <TouchableOpacity style={styles.headerButton} onPress={goToNewPage}>
             <Text style={styles.headerButtonText}>Option</Text>
           </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.headerButton} onPress={goToReceved}>
+            <Text style={styles.headerButtonText}>Mes messages</Text>
+          </TouchableOpacity>
           {image && (
             <TouchableOpacity style={styles.headerButton} onPress={goToSendPage}>
               <Text style={styles.headerButtonText}>Envoyer</Text>
@@ -55,6 +59,9 @@ export default function Camera() {
 
   const goToNewPage = () => {
     navigation.navigate('Option');
+  };
+  const goToReceved = () => {
+    navigation.navigate('ReceivedSnaps');
   };
 
   const goToSendPage = () => {

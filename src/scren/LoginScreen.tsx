@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, ActivityIndicator, CheckBox } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -50,7 +50,7 @@ const LoginScreen = () => {
         password,
       }, {
         headers: {
-          "X-API-Key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI"
+          "X-API-Key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0"
         }
       });
 
@@ -131,13 +131,13 @@ const LoginScreen = () => {
           <FontAwesome name={secureTextEntry ? "eye-slash" : "eye"} size={30} color="#C8C8C8" />
         </TouchableOpacity>
       </View>
-      <View style={styles.rememberMeContainer}>
+      {/* <View style={styles.rememberMeContainer}>
         <CheckBox
           value={rememberMe}
           onValueChange={setRememberMe}
         />
         <Text style={styles.rememberMeText}>Se souvenir de moi</Text>
-      </View>
+      </View> */}
       <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
       <TouchableOpacity style={styles.signInButtonContainer} onPress={login} disabled={loading}>
         {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.signIn}>Sign in</Text>}
