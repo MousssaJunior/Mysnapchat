@@ -129,7 +129,7 @@ const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.topImageContainer}>
-       
+
         <Image source={require('../asset/logintop.png')} style={styles.topImage} />
       </View>
       <View style={styles.helloContainer}>
@@ -168,10 +168,12 @@ const LoginScreen = () => {
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
         <Text style={styles.signupRedirect}>Vous n'avez pas de compte ? Inscrivez-vous</Text>
+
       </TouchableOpacity>
       <TouchableOpacity style={styles.linearGradient} onPress={loginWithFacebook}>
         <Text style={styles.buttonText}>Connexion avec Facebook</Text>
       </TouchableOpacity>
+
     </View>
   );
 };

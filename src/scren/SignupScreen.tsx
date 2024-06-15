@@ -63,7 +63,9 @@ const SignupScreen = ({ navigation }) => {
       <View style={styles.logoContainer}>
         <Image source={require('../asset/logintop.png')} style={styles.logo} />
       </View>
+
       <Text style={styles.signUpText}>Créer votre compte</Text>
+
       <TouchableOpacity style={styles.imagePicker} onPress={chooseImage}>
         {profilePicture ? (
           <Image source={{ uri: profilePicture }} style={styles.profilePicture} />
