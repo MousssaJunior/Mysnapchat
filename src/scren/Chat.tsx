@@ -4,6 +4,7 @@ import axios from 'axios';
 import * as FileSystem from 'expo-file-system';
 import { useRoute } from '@react-navigation/native';
 import * as ImageManipulator from 'expo-image-manipulator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Chat = () => {
   const [users, setUsers] = useState([]);
@@ -16,9 +17,12 @@ const Chat = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        const token = await AsyncStorage.getItem('token');
+        console.log(token);
+
         const response = await axios.get('https://snapchat.epidoc.eu/user', {
           headers: {
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3Q2NkBnbWFpbC5jb20iLCJpZCI6IjY2NjZjOWY0MDg2MmUyOWRlZjQzMWE4MiIsImlhdCI6MTcxODI3MDc1NSwiZXhwIjoxNzE4MzU3MTU1fQ.zkLS2m_FycxBb7uJXA0z4Yi_zF0PfzwOJFQ5MOF3tG8",
+            "Authorization": "Bearer " + token,
             "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI"
           }
         });
@@ -70,6 +74,7 @@ const Chat = () => {
 
   const sendImage = async (userId) => {
     try {
+      const token = await AsyncStorage.getItem('token');
       const base64Image = await convertImageToBase64(image, width, height);
       const formData = {
         image: "data:image/png;base64," + base64Image,
@@ -81,8 +86,8 @@ const Chat = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3Q2NkBnbWFpbC5jb20iLCJpZCI6IjY2NjZjOWY0MDg2MmUyOWRlZjQzMWE4MiIsImlhdCI6MTcxODI3MDc1NSwiZXhwIjoxNzE4MzU3MTU1fQ.zkLS2m_FycxBb7uJXA0z4Yi_zF0PfzwOJFQ5MOF3tG8",
-          "x-api-key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0",
+          'Authorization': "Bearer " + token,
+          "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0",
         },
         body: JSON.stringify(formData),
       });

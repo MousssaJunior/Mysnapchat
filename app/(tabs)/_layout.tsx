@@ -10,7 +10,7 @@ const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
   return (
-    <NavigationContainer independent={true}> 
+    <NavigationContainer independent={true}>
       <Tab.Navigator initialRouteName="Login">
         <Tab.Screen name="Login" component={LoginScreen} />
         <Tab.Screen name="Signup" component={SignupScreen} />

@@ -4,6 +4,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -98,56 +99,81 @@ const LoginScreen = () => {
     }
   };
 
+  const loginWithFacebook = async () => {
+    try {
+      const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+
+      if (result.isCancelled) {
+        Alert.alert('Connexion annulée');
+        return;
+      }
+
+      const data = await AccessToken.getCurrentAccessToken();
+
+      if (!data) {
+        Alert.alert('Erreur lors de l\'obtention du token');
+        return;
+      }
+
+      const facebookToken = data.accessToken.toString();
+     
+      
+      Alert.alert('Connexion Facebook réussie');
+      navigation.navigate('Camera');
+    } catch (error) {
+      console.log('Login fail with error: ' + error);
+      Alert.alert('Erreur lors de la connexion avec Facebook', error.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.topImageContainer}>
+
         <Image source={require('../asset/logintop.png')} style={styles.topImage} />
       </View>
       <View style={styles.helloContainer}>
         <Text style={styles.helloText}>MY-SNAP</Text>
       </View>
       <View>
-        <Text style={styles.signInText}>Sign in to your account</Text>
+        <Text style={styles.signInText}>Connectez-vous à votre compte</Text>
       </View>
       <View style={styles.inputContainer}>
-        <FontAwesome name="user" size={30} color="#C8C8C8" style={styles.inputIcon} />
+        <FontAwesome name="user" size={30} color="#000" style={styles.inputIcon} />
         <TextInput
           style={styles.textInput}
           placeholder="Email"
           value={email}
           onChangeText={(text) => setEmail(text)}
+          placeholderTextColor="#000"
         />
       </View>
       <View style={styles.inputContainer}>
-        <FontAwesome name="lock" size={30} color="#C8C8C8" style={styles.inputIcon} />
+        <FontAwesome name="lock" size={30} color="#000" style={styles.inputIcon} />
         <TextInput
           style={styles.textInput}
           placeholder="Password"
           secureTextEntry={secureTextEntry}
           value={password}
           onChangeText={(text) => setPassword(text)}
+          placeholderTextColor="#000"
         />
         <TouchableOpacity onPress={() => setSecureTextEntry(!secureTextEntry)}>
-          <FontAwesome name={secureTextEntry ? "eye-slash" : "eye"} size={30} color="#C8C8C8" />
+          <FontAwesome name={secureTextEntry ? "eye-slash" : "eye"} size={30} color="#000" />
         </TouchableOpacity>
       </View>
-      {/* <View style={styles.rememberMeContainer}>
-        <CheckBox
-          value={rememberMe}
-          onValueChange={setRememberMe}
-        />
-        <Text style={styles.rememberMeText}>Se souvenir de moi</Text>
-      </View> */}
-      <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
+      <Text style={styles.forgotPasswordText}>Mot de passe oublié ?</Text>
       <TouchableOpacity style={styles.signInButtonContainer} onPress={login} disabled={loading}>
-        {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.signIn}>Sign in</Text>}
+        {loading ? <ActivityIndicator color="#000" /> : <Text style={styles.signIn}>Connexion</Text>}
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-        <Text style={styles.signupRedirect}>Don't have an account? Sign Up</Text>
+        <Text style={styles.signupRedirect}>Vous n'avez pas de compte ? Inscrivez-vous</Text>
+
       </TouchableOpacity>
-      <View style={styles.linearGradient}>
-        <Text style={styles.buttonText}>Sign in with Facebook</Text>
-      </View>
+      <TouchableOpacity style={styles.linearGradient} onPress={loginWithFacebook}>
+        <Text style={styles.buttonText}>Connexion avec Facebook</Text>
+      </TouchableOpacity>
+
     </View>
   );
 };
@@ -155,35 +181,40 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFC00',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 20,
   },
   topImageContainer: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
   },
   topImage: {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
   },
   helloContainer: {
-    marginBottom: 20,
+    marginBottom: 30,
   },
   helloText: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
+    color: '#000',
   },
   signInText: {
-    fontSize: 16,
-    marginBottom: 20,
+    fontSize: 18,
+    marginBottom: 30,
+    color: '#000',
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#C8C8C8',
+    borderBottomWidth: 2,
+    borderBottomColor: '#000',
     marginBottom: 20,
+    width: '100%',
   },
   inputIcon: {
     marginRight: 10,
@@ -191,44 +222,43 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     height: 40,
+    fontSize: 16,
+    color: '#000',
   },
   forgotPasswordText: {
-    color: '#C8C8C8',
+    color: '#000',
     marginBottom: 20,
-  },
-  rememberMeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  rememberMeText: {
-    marginLeft: 10,
-    color: '#C8C8C8',
+    textDecorationLine: 'underline',
   },
   signInButtonContainer: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+    backgroundColor: '#000',
+    paddingVertical: 12,
+    paddingHorizontal: 50,
+    borderRadius: 30,
     marginBottom: 20,
   },
   signIn: {
-    color: '#fff',
+    color: '#FFFC00',
     fontSize: 16,
+    fontWeight: 'bold',
   },
   signupRedirect: {
-    color: '#4CAF50',
+    color: '#000',
     marginBottom: 20,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   linearGradient: {
     backgroundColor: '#3b5998',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 50,
+    borderRadius: 30,
+    marginTop: 20,
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
