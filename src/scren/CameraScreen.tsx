@@ -11,7 +11,7 @@ export default function Camera() {
   const [permission, requestPermission] = useCameraPermissions();
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
-  const [duration, setDuration] = useState(5); 
+  const [duration, setDuration] = useState(5);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -111,16 +111,6 @@ export default function Camera() {
           <Image source={{ uri: image }} style={styles.image} />
           <View style={styles.durationContainer}>
             <Text style={styles.durationLabel}>Durée :</Text>
-            <Picker
-  selectedValue={duration}
-  style={styles.picker}
-  onValueChange={(itemValue) => setDuration(itemValue)}
->
-  {[...Array(11).keys()].map(i => (
-    <Picker.Item key={i} label={`${i} secondes`} value={i} />
-  ))}
-</Picker>
-
           </View>
           <TouchableOpacity style={styles.deleteButton} onPress={deletePicture}>
             <Text style={styles.buttonText}>Supprimer la photo</Text>
@@ -207,6 +197,7 @@ const styles = StyleSheet.create({
     width: 150,
     color: 'white',
   },
+  
   deleteButton: {
     position: 'absolute',
     bottom: 20,
