@@ -63,7 +63,9 @@ const SignupScreen = ({ navigation }) => {
       <View style={styles.logoContainer}>
         <Image source={require('../asset/logintop.png')} style={styles.logo} />
       </View>
-      <Text style={styles.signUpText}>Create your account</Text>
+
+      <Text style={styles.signUpText}>Créer votre compte</Text>
+
       <TouchableOpacity style={styles.imagePicker} onPress={chooseImage}>
         {profilePicture ? (
           <Image source={{ uri: profilePicture }} style={styles.profilePicture} />
@@ -103,10 +105,10 @@ const SignupScreen = ({ navigation }) => {
         />
       </View>
       <TouchableOpacity style={styles.signupButtonContainer} onPress={register}>
-        <Text style={styles.signupButton}>Sign up</Text>
+        <Text style={styles.signupButton}>S'inscrire</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.loginRedirect}>Already have an account? Login</Text>
+        <Text style={styles.loginRedirect}>Déjà un compte ? Connectez-vous</Text>
       </TouchableOpacity>
     </ScrollView>
   );
