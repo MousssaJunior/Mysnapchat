@@ -27,7 +27,7 @@ const SignupScreen = ({ navigation }) => {
           password,
         },{
             headers:{
-           " X-API-Key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0"
+           "X-API-Key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0"
         }});
 
         if (response.status === 200) {
@@ -60,45 +60,43 @@ const SignupScreen = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.topImageContainer}>
-        <Image source={require('../asset/logintop.png')} style={styles.topImage} />
+      <View style={styles.logoContainer}>
+        <Image source={require('../asset/logintop.png')} style={styles.logo} />
       </View>
-      <View style={styles.helloContainer}>
-        <Text style={styles.helloText}>Welcome</Text>
-      </View>
-      <View>
-        <Text style={styles.signInText}>Create your account</Text>
-      </View>
+      <Text style={styles.signUpText}>Create your account</Text>
       <TouchableOpacity style={styles.imagePicker} onPress={chooseImage}>
         {profilePicture ? (
           <Image source={{ uri: profilePicture }} style={styles.profilePicture} />
         ) : (
-          <FontAwesome name="camera" size={30} color="#C8C8C8" />
+          <FontAwesome name="camera" size={30} color="#FFFC00" />
         )}
       </TouchableOpacity>
       <View style={styles.inputContainer}>
-        <FontAwesome name="user" size={30} color="#C8C8C8" style={styles.inputIcon} />
+        <FontAwesome name="user" size={20} color="#000" style={styles.inputIcon} />
         <TextInput
           style={styles.textInput}
           placeholder="Username"
+          placeholderTextColor="#808080"
           value={username}
           onChangeText={setUsername}
         />
       </View>
       <View style={styles.inputContainer}>
-        <FontAwesome name="envelope" size={30} color="#C8C8C8" style={styles.inputIcon} />
+        <FontAwesome name="envelope" size={20} color="#000" style={styles.inputIcon} />
         <TextInput
           style={styles.textInput}
           placeholder="Email"
+          placeholderTextColor="#808080"
           value={email}
           onChangeText={setEmail}
         />
       </View>
       <View style={styles.inputContainer}>
-        <FontAwesome name="lock" size={30} color="#C8C8C8" style={styles.inputIcon} />
+        <FontAwesome name="lock" size={20} color="#000" style={styles.inputIcon} />
         <TextInput
           style={styles.textInput}
           placeholder="Password"
+          placeholderTextColor="#808080"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
@@ -116,85 +114,82 @@ const SignupScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#FFFC00",
     flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 20,
   },
-  topImageContainer: {
+  logoContainer: {
     marginBottom: 20,
   },
-  topImage: {
-    width: "100%",
-    height: 120,
+  logo: {
+    width: 100,
+    height: 100,
   },
-  helloContainer: {
-    marginBottom: 10,
-  },
-  helloText: {
+  signUpText: {
     textAlign: "center",
-    fontSize: 70,
-    fontWeight: "500",
-    color: "#262626",
-  },
-  signInText: {
-    textAlign: "center",
-    fontSize: 18,
-    color: "#262626",
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#000",
     marginBottom: 20,
   },
   imagePicker: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: "#FFFFFF",
-    borderRadius: 10,
-    marginHorizontal: 40,
-    elevation: 10,
-    marginVertical: 20,
+    backgroundColor: "#FFF",
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: "#000",
+    marginBottom: 20,
     width: 100,
     height: 100,
   },
   profilePicture: {
     width: 100,
     height: 100,
-    borderRadius: 10,
+    borderRadius: 50,
   },
   inputContainer: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#FFF",
     flexDirection: "row",
-    borderRadius: 10,
+    borderRadius: 50,
     marginHorizontal: 40,
-    elevation: 10,
     marginVertical: 10,
     alignItems: "center",
-    height: 70,
+    paddingHorizontal: 20,
+    borderWidth: 2,
+    borderColor: "#000",
+    height: 50,
   },
   inputIcon: {
-    marginLeft: 15,
+    marginRight: 10,
   },
   textInput: {
     flex: 1,
-    paddingLeft: 10,
+    fontSize: 16,
+    color: "#000",
   },
   signupButtonContainer: {
     marginTop: 20,
     alignItems: "center",
-    backgroundColor: '#4c669f',
-    borderRadius: 5,
+    backgroundColor: '#000',
+    borderRadius: 50,
     padding: 15,
     marginHorizontal: 40,
     width: "80%",
   },
   signupButton: {
-    color: "#fff",
+    color: "#FFFC00",
     fontSize: 18,
+    fontWeight: "bold",
   },
   loginRedirect: {
-    color: "#BEBEBE",
+    color: "#000",
     textAlign: "center",
     marginTop: 20,
     fontSize: 15,
+    textDecorationLine: 'underline',
   },
 });
 
