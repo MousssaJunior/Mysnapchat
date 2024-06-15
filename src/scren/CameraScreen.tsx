@@ -7,13 +7,14 @@ import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
 
 export default function Camera() {
   const [facing, setFacing] = useState('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
-  const [duration, setDuration] = useState(5);  // Durée par défaut
+  const [duration, setDuration] = useState(5); 
   const navigation = useNavigation();
 
   useEffect(() => {

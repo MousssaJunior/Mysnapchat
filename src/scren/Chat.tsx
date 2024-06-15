@@ -13,17 +13,16 @@ const Chat = () => {
   const { image } = route.params || "";
   const width = 360;
   const height = 640;
+  const [duration, setDuration] = useState(5); // Durée par défaut de 5 secondes
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
-        console.log(token);
-
         const response = await axios.get('https://snapchat.epidoc.eu/user', {
           headers: {
             "Authorization": "Bearer " + token,
-            "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI"
+            "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI", // Remplacez par votre clé API
           }
         });
 
@@ -79,7 +78,7 @@ const Chat = () => {
       const formData = {
         image: "data:image/png;base64," + base64Image,
         to: userId,
-        duration: 5
+        duration: duration, // Utiliser la durée sélectionnée
       };
 
       const response = await fetch('https://snapchat.epidoc.eu/snap', {
@@ -87,7 +86,7 @@ const Chat = () => {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': "Bearer " + token,
-          "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0",
+          "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI", // Remplacez par votre clé API
         },
         body: JSON.stringify(formData),
       });
