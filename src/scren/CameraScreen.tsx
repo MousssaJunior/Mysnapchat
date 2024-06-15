@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
-
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import { Ionicons } from '@expo/vector-icons'; 
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 
 export default function Camera() {
@@ -24,7 +21,6 @@ export default function Camera() {
           <TouchableOpacity style={styles.headerButton} onPress={goToNewPage}>
             <Text style={styles.headerButtonText}>Option</Text>
           </TouchableOpacity>
-          
           <TouchableOpacity style={styles.headerButton} onPress={goToReceived}>
             <Text style={styles.headerButtonText}>Mes messages</Text>
           </TouchableOpacity>
@@ -67,9 +63,7 @@ export default function Camera() {
   };
 
   const goToSendPage = () => {
-
     navigation.navigate('Chat', { image, duration });
-
   };
 
   const deletePicture = () => {
@@ -101,17 +95,13 @@ export default function Camera() {
         <View style={styles.overlay}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.galleryButton} onPress={addImage}>
-
-            <Entypo name="folder-images" size={24} color="white" />
-
+              <Entypo name="folder-images" size={24} color="white" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.snapButton} onPress={takePicture}>
               <Ionicons name="camera" size={24} color="black" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.flipButton} onPress={toggleCameraFacing}>
-
-            <MaterialCommunityIcons name="camera-flip-outline" size={24} color="white" />
-
+              <MaterialCommunityIcons name="camera-flip-outline" size={24} color="white" />
             </TouchableOpacity>
           </View>
         </View>
@@ -122,14 +112,15 @@ export default function Camera() {
           <View style={styles.durationContainer}>
             <Text style={styles.durationLabel}>Durée :</Text>
             <Picker
-              selectedValue={duration}
-              style={styles.picker}
-              onValueChange={(itemValue) => setDuration(itemValue)}
-            >
-              {[...Array(11).keys()].map(i => (
-                <Picker.Item key={i} label={`${i} secondes`} value={i} />
-              ))}
-            </Picker>
+  selectedValue={duration}
+  style={styles.picker}
+  onValueChange={(itemValue) => setDuration(itemValue)}
+>
+  {[...Array(11).keys()].map(i => (
+    <Picker.Item key={i} label={`${i} secondes`} value={i} />
+  ))}
+</Picker>
+
           </View>
           <TouchableOpacity style={styles.deleteButton} onPress={deletePicture}>
             <Text style={styles.buttonText}>Supprimer la photo</Text>
@@ -145,9 +136,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-
-    backgroundColor: 'black', 
-
+    backgroundColor: 'black',
   },
   camera: {
     flex: 1,
@@ -155,44 +144,36 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-
-    justifyContent: 'flex-end', 
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    paddingBottom: 20, 
+    paddingBottom: 20,
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around', 
-    width: '80%', 
-
+    justifyContent: 'space-around',
+    width: '80%',
   },
   snapButton: {
     width: 80,
     height: 80,
-
-    borderRadius: 40, 
-    backgroundColor: '#FFFC00', 
-
+    borderRadius: 40,
+    backgroundColor: '#FFFC00',
     justifyContent: 'center',
     alignItems: 'center',
   },
   galleryButton: {
     width: 50,
     height: 50,
-
-    borderRadius: 25, 
-    backgroundColor: 'rgba(0, 0, 0, 0.6)', 
-
+    borderRadius: 25,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   flipButton: {
     width: 50,
     height: 50,
-
-    borderRadius: 25, 
-    backgroundColor: 'rgba(0, 0, 0, 0.6)', 
-
+    borderRadius: 25,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -205,7 +186,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
-
     borderWidth: 1,
     borderColor: '#FFFC00',
   },
@@ -226,7 +206,6 @@ const styles = StyleSheet.create({
     height: 50,
     width: 150,
     color: 'white',
-
   },
   deleteButton: {
     position: 'absolute',
@@ -245,11 +224,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   permissionButton: {
-
     backgroundColor: '#4CAF50',
-
- 
-
     padding: 10,
     borderRadius: 5,
   },
