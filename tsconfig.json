@@ -12,10 +12,10 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-
-, "components/camera.jsx", "src/scren/Chat.jsx"  
-
-, "components/camera.jsx", "src/scren/CameraScreen.tsx" ]
-
+    "expo-env.d.ts",
+    "components/camera.jsx",
+    "src/scren/Chat.jsx",
+    "components/camera.jsx",
+    "src/scren/CameraScreen.tsx"
+  ]
 }

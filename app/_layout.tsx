@@ -17,10 +17,6 @@ import userpp from '../src/screen/userpp';
 
 
 
-
-
-
-
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
