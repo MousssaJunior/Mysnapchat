@@ -10,10 +10,10 @@ const Chat = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const route = useRoute();
-  const { image } = route.params || "";
+  const { image, duration: routeDuration } = route.params || {};
   const width = 360;
   const height = 640;
-  const [duration, setDuration] = useState(5); // Durée par défaut de 5 secondes
+  const [duration, setDuration] = useState(routeDuration || 5);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -22,7 +22,7 @@ const Chat = () => {
         const response = await axios.get('https://snapchat.epidoc.eu/user', {
           headers: {
             "Authorization": "Bearer " + token,
-            "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI", // Remplacez par votre clé API
+            "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0", // Remplacez par votre clé API
           }
         });
 
@@ -86,7 +86,7 @@ const Chat = () => {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': "Bearer " + token,
-          "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI", // Remplacez par votre clé API
+          "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0", // Remplacez par votre clé API
         },
         body: JSON.stringify(formData),
       });
