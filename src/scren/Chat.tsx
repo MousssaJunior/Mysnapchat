@@ -1,63 +1,61 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ScrollView, ActivityIndicator, TouchableOpacity, Alert } from 'react-native'; // Ajout de Picker
+import { StyleSheet, Text, View, ScrollView, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import axios from 'axios';
 import * as FileSystem from 'expo-file-system';
 import { useRoute } from '@react-navigation/native';
 import * as ImageManipulator from 'expo-image-manipulator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
-
+import { MaterialIcons } from '@expo/vector-icons';
 
 const Chat = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [duration, setDuration] = useState({Picker}); // Durée par défaut à null
+  const [duration, setDuration] = useState(null);
   const route = useRoute();
   const { image } = route.params || {};
   const width = 360;
   const height = 640;
 
   useEffect(() => {
-    console.log('Valeur initiale de duration dans useEffect :', duration); // Log pour vérifier l'initialisation
-
     const fetchUsers = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
         const response = await axios.get('https://snapchat.epidoc.eu/user', {
           headers: {
             "Authorization": "Bearer " + token,
-            "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhcmFrYXJpbTAxMjhAZ21haWwuY29tIiwiaWQiOiI2NjZkN2Q2MzA4NjJlMjlkZWY0MzFmNzciLCJpYXQiOjE3MTg0NjcxMjIsImV4cCI6MTcxODU1MzUyMn0.uBN-sHpc-phPvtNNzG7S_RJoqCBAbyfAFIiw4zuVYII", // Remplacez par votre clé API
+            "x-api-key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhcmFrYXJpbTAxMjhAZ21haWwuY29tIiwiaWQiOiI2NjZkN2Q2MzA4NjJlMjlkZWY0MzFmNzciLCJpYXQiOjE3MTg0NjcxMjIsImV4cCI6MTcxODU1MzUyMn0.uBN-sHpc-phPvtNNzG7S_RJoqCBAbyfAFIiw4zuVYII", 
           }
         });
 
         if (response.status !== 200) {
-          throw new Error(`Erreur HTTP ! statut : ${response.status}`);
+          throw new Error(`HTTP Error! Status: ${response.status}`);
         }
 
         setUsers(response.data.data || []);
       } catch (error) {
-        console.log('Réponse d\'erreur :', error.response ? error.response.data : error.message);
-        let errorMessage = 'Une erreur est survenue.';
+        console.log('Error response:', error.response ? error.response.data : error.message);
+        let errorMessage = 'An error occurred.';
         if (error.response && error.response.data.message) {
           switch (error.response.data.message) {
             case 'user not found':
-              errorMessage = 'Utilisateur non trouvé';
+              errorMessage = 'User not found';
               break;
             case 'credentials are bad':
-              errorMessage = 'Les identifiants sont incorrects';
+              errorMessage = 'Invalid credentials';
               break;
             default:
               errorMessage = error.response.data.message;
           }
         }
-        Alert.alert('Erreur', errorMessage);
+        Alert.alert('Error', errorMessage);
       } finally {
         setLoading(false);
       }
     };
 
     fetchUsers();
-  }, [duration]); // Ajout de duration comme dépendance
+  }, [duration]);
 
   const convertImageToBase64 = async (uri, width, height) => {
     try {
@@ -70,8 +68,8 @@ const Chat = () => {
       });
       return base64;
     } catch (error) {
-      console.log('Erreur lors de la conversion de l\'image en base64 :', error);
-      throw new Error('Erreur lors de la conversion de l\'image en base64');
+      console.log('Error converting image to base64:', error);
+      throw new Error('Error converting image to base64');
     }
   };
 
@@ -82,7 +80,7 @@ const Chat = () => {
       const formData = {
         image: "data:image/png;base64," + base64Image,
         to: userId,
-        duration: selectedDuration, // Utiliser la valeur de selectedDuration passée en paramètre
+        duration: selectedDuration,
       };
 
       const response = await fetch('https://snapchat.epidoc.eu/snap', {
@@ -95,38 +93,37 @@ const Chat = () => {
         body: JSON.stringify(formData),
       });
 
-      console.log('Statut de la réponse :', response.status);
+      console.log('Response status:', response.status);
       const responseData = await response.json();
-      console.log('Données de la réponse :', responseData);
+      console.log('Response data:', responseData);
 
       if (response.status === 200) {
-        Alert.alert('Succès', 'Image envoyée avec succès !');
+        Alert.alert('Success', 'Image sent successfully!');
       } else {
-        throw new Error('Échec de l\'envoi de l\'image');
+        throw new Error('Failed to send image');
       }
     } catch (error) {
-      console.log('Erreur :', error);
-      Alert.alert('Erreur', 'Échec de l\'envoi de l\'image');
+      console.log('Error:', error);
+      Alert.alert('Error', 'Failed to send image');
     }
   };
 
   const handleSendImage = (userId) => {
     if (duration === null) {
-      Alert.alert('Sélectionnez une durée', 'Veuillez sélectionner une durée avant d\'envoyer l\'image.');
+      Alert.alert('Select a duration', 'Please select a duration before sending the image.');
       return;
     }
-    sendImage(userId, duration); // Passer la valeur actuelle de duration
+    sendImage(userId, duration);
   };
 
-  // Fonction appelée lorsque la durée est sélectionnée dans le Picker
   const handleDurationChange = (selectedDuration) => {
-    setDuration(selectedDuration); // Mettre à jour la valeur de duration
+    setDuration(selectedDuration);
   };
 
   if (loading) {
     return (
       <View style={styles.container}>
-        <Text>En cours...</Text>
+        <Text>Loading...</Text>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
@@ -135,76 +132,99 @@ const Chat = () => {
   if (users.length === 0) {
     return (
       <View style={styles.container}>
-        <Text>Vous n'avez pas d'ami</Text>
+        <Text>No friends found</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>MES AMIS</Text>
-      {users.map(user => (
-        <View key={user._id} style={styles.friendContainer}>
-          <Text style={styles.username}>{user.username}</Text>
-          {image && (
-            <TouchableOpacity style={styles.sendButton} onPress={() => handleSendImage(user._id)}>
-              <Text style={styles.sendButtonText}>Envoyer l'image</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      ))}
-      {/* Ajouter un Picker pour la sélection de la durée */}
-      <Picker
-        selectedValue={duration}
-        onValueChange={(itemValue) => handleDurationChange(itemValue)}
-        style={{ height: 50, width: 150 }}
-      >
-         <Picker.Item label="5 secondes" value={5} />
-        <Picker.Item label="8 secondes" value={8} />
-        <Picker.Item label="12 secondes" value={12} />
-        <Picker.Item label="20 secondes" value={20} />
-      
-      </Picker>
-    </ScrollView>
+    <View style={styles.container}>
+      <View style={styles.pickerContainer}>
+        <MaterialIcons name="timer" size={24} color="#4CAF50" style={styles.pickerIcon} />
+        <Picker
+          selectedValue={duration}
+          onValueChange={(itemValue) => handleDurationChange(itemValue)}
+          style={styles.picker}
+        >
+          <Picker.Item label="5 seconds" value={5} />
+          <Picker.Item label="8 seconds" value={8} />
+          <Picker.Item label="12 seconds" value={12} />
+          <Picker.Item label="20 seconds" value={20} />
+        </Picker>
+      </View>
+      <ScrollView style={styles.friendList}>
+        <Text style={styles.header}>MY FRIENDS</Text>
+        {users.map(user => (
+          <TouchableOpacity
+            key={user._id}
+            style={styles.friendContainer}
+            onPress={() => handleSendImage(user._id)}
+          >
+            <Text style={styles.username}>{user.username}</Text>
+            {image && (
+              <View style={styles.sendIcon}>
+                <MaterialIcons name="send" size={24} color="#FFFC00" />
+              </View>
+            )}
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </View>
   );
+  
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  header: {
-    fontSize: 24,
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  friendContainer: {
-    marginBottom: 16,
-    padding: 16,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  username: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  sendButton: {
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: '#4CAF50',
-    borderRadius: 5,
-  },
-  sendButtonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-});
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 16,
+      backgroundColor: '#fff',
+    },
+    pickerContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 16,
+      marginTop: 20, 
+    },
+    pickerIcon: {
+      marginRight: 10,
+    },
+    picker: {
+      height: 50,
+      width: 150,
+      borderWidth: 1,
+      borderColor: '#ccc',
+      borderRadius: 8,
+    },
+    friendList: {
+      marginBottom: 20,
+    },
+    header: {
+      fontSize: 24,
+      marginBottom: 16,
+      textAlign: 'center',
+    },
+    friendContainer: {
+      marginBottom: 16,
+      padding: 16,
+      backgroundColor: '#f9f9f9',
+      borderRadius: 8,
+      shadowColor: '#000',
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      shadowOffset: { width: 0, height: 2 },
+    },
+    username: {
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    sendIcon: {
+      position: 'absolute',
+      right: 20,
+      top: '50%',
+      transform: [{ translateY: -12 }],
+    },
+  });
+  
 
 export default Chat;
