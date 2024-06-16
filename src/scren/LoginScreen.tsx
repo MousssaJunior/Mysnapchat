@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, ActivityIndicator, Switch } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import MainNavigator from './MainNavigator'; // Importez le navigateur principal
+import MainNavigator from './MainNavigator'; 
 import SignupScreen from '../scren/SignupScreen';
 
 const Stack = createNativeStackNavigator();
@@ -18,7 +18,7 @@ const AuthNavigator = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false); 
 
   useEffect(() => {
     const loadRememberedCredentials = async () => {
@@ -74,7 +74,7 @@ const AuthNavigator = () => {
           Alert.alert('Connexion réussie');
           navigation.reset({
             index: 0,
-            routes: [{ name: 'MainNavigator' }], // Redéfinir la navigation vers le navigateur principal
+            routes: [{ name: 'MainNavigator' }],
           });
         } else {
           Alert.alert('Erreur lors de la connexion', 'Le jeton d\'authentification est manquant dans la réponse.');
@@ -109,7 +109,7 @@ const AuthNavigator = () => {
   };
 
   const loginWithFacebook = async () => {
-    // Code pour la connexion avec Facebook
+ 
   };
 
   return (
@@ -151,6 +151,16 @@ const AuthNavigator = () => {
               </TouchableOpacity>
             </View>
             <Text style={styles.forgotPasswordText}>Mot de passe oublié ?</Text>
+            <View style={styles.rememberMeContainer}>
+              <Switch
+                value={rememberMe}
+                onValueChange={(value) => setRememberMe(value)}
+                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                thumbColor={rememberMe ? "#f4f3f4" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+              />
+              <Text style={styles.rememberMeText}>Se souvenir de moi</Text>
+            </View>
             <TouchableOpacity style={styles.signInButtonContainer} onPress={login} disabled={loading}>
               {loading ? <ActivityIndicator color="#000" /> : <Text style={styles.signIn}>Connexion</Text>}
             </TouchableOpacity>
@@ -220,6 +230,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textDecorationLine: 'underline',
   },
+  rememberMeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    marginBottom: 20,
+    color: '#fff600',
+  },
+  rememberMeText: {
+    fontSize: 16,
+    marginLeft: 10,
+    color: '#000',
+  },
   signInButtonContainer: {
     backgroundColor: '#000',
     paddingVertical: 12,
@@ -237,6 +259,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontSize: 16,
     fontWeight: 'bold',
+
   },
   linearGradient: {
     backgroundColor: '#3b5998',
