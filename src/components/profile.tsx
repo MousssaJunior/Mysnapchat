@@ -22,8 +22,8 @@ export default function ProfileView() {
 
         const response = await axios.get('https://snapchat.epidoc.eu/user', {
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'x-api-key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhcmFrYXJpbTAxMjhAZ21haWwuY29tIiwiaWQiOiI2NjZkN2Q2MzA4NjJlMjlkZWY0MzFmNzciLCJpYXQiOjE3MTg0NjcxMjIsImV4cCI6MTcxODU1MzUyMn0.uBN-sHpc-phPvtNNzG7S_RJoqCBAbyfAFIiw4zuVYII', 
+            "Authorization": "Bearer " + token,
+            'x-api-key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0', 
           },
         });
 
@@ -54,13 +54,16 @@ export default function ProfileView() {
       Alert.alert('Erreur lors de la déconnexion', 'Une erreur est survenue lors de la déconnexion.');
     }
   };
-
+  const navigateToCRUD = () => {
+    navigation.navigate('Crud'); 
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
           <Image
             style={styles.avatar}
+            source={{ uri: profile.profilePicture }} 
           />
           <Text style={styles.username}>{profile.username}</Text>
         </View>
@@ -75,6 +78,19 @@ export default function ProfileView() {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed varius tellus eget metus efficitur,
             sed tempus felis placerat. Phasellus a ipsum vel mi accumsan varius non a risus.
           </Text>
+          <View style={styles.profileDetail}>
+            <View style={styles.detailContent}>
+              <Text style={styles.title}>Followers</Text>
+              <Text style={styles.count}>200</Text>
+            </View>
+            <View style={styles.detailContent}>
+              <Text style={styles.title}>Following</Text>
+              <Text style={styles.count}>200</Text>
+            </View>
+            <TouchableOpacity style={styles.buttonContainer} onPress={navigateToCRUD}>
+            <Text>CRUD</Text>
+          </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
@@ -129,5 +145,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: '#333',
+  },
+  profileDetail: {
+    alignSelf: 'center',
+    marginTop: 20,
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  detailContent: {
+    margin: 10,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 20,
+    color: '#DDDDDD',
+  },
+  count: {
+    fontSize: 18,
   },
 });

@@ -10,6 +10,7 @@ import CameraScreen from '../src/scren/CameraScreen';
 import ReceivedSnaps from '../src/scren/Recivedreponse';
 import Chat from '../src/scren/Chat';
 import Option from '../src/screen/userpp';
+import Crud from '../src/scren/Crud';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,7 @@ const MainNavigator = () => (
     <MainStack.Screen name="ReceivedSnaps" component={ReceivedSnaps} />
     <MainStack.Screen name="Chat" component={Chat} />
     <MainStack.Screen name="Option" component={Option} />
+    <MainStack.Screen name="Crud" component={Crud} />
   </MainStack.Navigator>
 );
 
