@@ -4,15 +4,21 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const LoginScreen = () => {
+import MainNavigator from './MainNavigator'; // Importez le navigateur principal
+import SignupScreen from '../scren/SignupScreen';
+
+const Stack = createNativeStackNavigator();
+
+const AuthNavigator = () => {
+  const navigation = useNavigation();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [rememberMe, setRememberMe] = useState(false);
-  const navigation = useNavigation();
 
   useEffect(() => {
     const loadRememberedCredentials = async () => {
@@ -66,7 +72,10 @@ const LoginScreen = () => {
             await AsyncStorage.removeItem('password');
           }
           Alert.alert('Connexion réussie');
-          navigation.navigate('Camera');
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'MainNavigator' }], // Redéfinir la navigation vers le navigateur principal
+          });
         } else {
           Alert.alert('Erreur lors de la connexion', 'Le jeton d\'authentification est manquant dans la réponse.');
         }
@@ -100,81 +109,62 @@ const LoginScreen = () => {
   };
 
   const loginWithFacebook = async () => {
-    try {
-      const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
-
-      if (result.isCancelled) {
-        Alert.alert('Connexion annulée');
-        return;
-      }
-
-      const data = await AccessToken.getCurrentAccessToken();
-
-      if (!data) {
-        Alert.alert('Erreur lors de l\'obtention du token');
-        return;
-      }
-
-      const facebookToken = data.accessToken.toString();
-     
-      
-      Alert.alert('Connexion Facebook réussie');
-      navigation.navigate('Camera');
-    } catch (error) {
-      console.log('Login fail with error: ' + error);
-      Alert.alert('Erreur lors de la connexion avec Facebook', error.message);
-    }
+    // Code pour la connexion avec Facebook
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.topImageContainer}>
-
-        <Image source={require('../asset/logintop.png')} style={styles.topImage} />
-      </View>
-      <View style={styles.helloContainer}>
-        <Text style={styles.helloText}>MY-SNAP</Text>
-      </View>
-      <View>
-        <Text style={styles.signInText}>Connectez-vous à votre compte</Text>
-      </View>
-      <View style={styles.inputContainer}>
-        <FontAwesome name="user" size={30} color="#000" style={styles.inputIcon} />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          placeholderTextColor="#000"
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <FontAwesome name="lock" size={30} color="#000" style={styles.inputIcon} />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Password"
-          secureTextEntry={secureTextEntry}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          placeholderTextColor="#000"
-        />
-        <TouchableOpacity onPress={() => setSecureTextEntry(!secureTextEntry)}>
-          <FontAwesome name={secureTextEntry ? "eye-slash" : "eye"} size={30} color="#000" />
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.forgotPasswordText}>Mot de passe oublié ?</Text>
-      <TouchableOpacity style={styles.signInButtonContainer} onPress={login} disabled={loading}>
-        {loading ? <ActivityIndicator color="#000" /> : <Text style={styles.signIn}>Connexion</Text>}
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-        <Text style={styles.signupRedirect}>Vous n'avez pas de compte ? Inscrivez-vous</Text>
-
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.linearGradient} onPress={loginWithFacebook}>
-        <Text style={styles.buttonText}>Connexion avec Facebook</Text>
-      </TouchableOpacity>
-
-    </View>
+    <Stack.Navigator initialRouteName="Login">
+      <Stack.Screen name="Login" options={{ headerShown: false }}>
+        {() => (
+          <View style={styles.container}>
+            <View style={styles.topImageContainer}>
+              <Image source={require('../asset/logintop.png')} style={styles.topImage} />
+            </View>
+            <View style={styles.helloContainer}>
+              <Text style={styles.helloText}>MY-SNAP</Text>
+            </View>
+            <View>
+              <Text style={styles.signInText}>Connectez-vous à votre compte</Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <FontAwesome name="user" size={30} color="#000" style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Email"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+                placeholderTextColor="#000"
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <FontAwesome name="lock" size={30} color="#000" style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Password"
+                secureTextEntry={secureTextEntry}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                placeholderTextColor="#000"
+              />
+              <TouchableOpacity onPress={() => setSecureTextEntry(!secureTextEntry)}>
+                <FontAwesome name={secureTextEntry ? "eye-slash" : "eye"} size={30} color="#000" />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.forgotPasswordText}>Mot de passe oublié ?</Text>
+            <TouchableOpacity style={styles.signInButtonContainer} onPress={login} disabled={loading}>
+              {loading ? <ActivityIndicator color="#000" /> : <Text style={styles.signIn}>Connexion</Text>}
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+              <Text style={styles.signupRedirect}>Vous n'avez pas de compte ? Inscrivez-vous</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.linearGradient} onPress={loginWithFacebook}>
+              <Text style={styles.buttonText}>Connexion avec Facebook</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
+    </Stack.Navigator>
   );
 };
 
@@ -262,4 +252,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default AuthNavigator;
