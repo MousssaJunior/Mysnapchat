@@ -44,28 +44,28 @@ export function UploadImage() {
 }
 
 const imageUploaderStyles = StyleSheet.create({
-  container: {
-    elevation: 2,
-    height: 130,
-    width: 130,
-    backgroundColor: '#efefef',
-    position: 'relative',
-    bottom: 296,
-    overflow: 'hidden',
-    marginLeft: 130,
-  },
-  uploadBtnContainer: {
-    opacity: 0.7,
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'lightgrey',
-    width: '100%',
-    height: '25%',
-  },
-  uploadBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  // container: {
+  //   elevation: 2,
+  //   height: 130,
+  //   width: 130,
+  //   backgroundColor: '#efefef',
+  //   position: 'relative',
+  //   bottom: 296,
+  //   overflow: 'hidden',
+  //   marginLeft: 130,
+  // },
+  // uploadBtnContainer: {
+  //   opacity: 0.7,
+  //   position: 'absolute',
+  //   right: 0,
+  //   bottom: 0,
+  //   backgroundColor: 'lightgrey',
+  //   width: '100%',
+  //   height: '25%',
+  // },
+  // uploadBtn: {
+  //   display: 'flex',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
 });

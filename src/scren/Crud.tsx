@@ -4,7 +4,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
-const ChangeUserDetails = () => {
+const Crud = () => {
   const [username, setUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newEmail, setNewEmail] = useState('');
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChangeUserDetails;
+export default Crud;
