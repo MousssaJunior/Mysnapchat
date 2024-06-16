@@ -45,7 +45,7 @@ const Crud = () => {
       <Text style={styles.label}>Changer l'email</Text>
       <TextInput
         style={styles.input}
-        placeholder="Nouveau pseudonyme"
+        placeholder="Nouveau email"
         value={newEmail}
         onChangeText={setNewEmail}
       />
@@ -57,8 +57,11 @@ const Crud = () => {
         value={newPassword}
         onChangeText={setNewPassword}
       />
-     <Text style={styles.label}></Text>
-      <Button title="Sauvegarder les changements" onPress={handleSaveChanges} />
+      <Button
+        title="Sauvegarder les changements"
+        onPress={handleSaveChanges}
+        color="#fff600"
+      />
     </View>
   );
 };
@@ -66,16 +69,27 @@ const Crud = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 12,
-    paddingLeft: 8,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    width: '100%',
   },
   label: {
     marginBottom: 8,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    alignSelf: 'flex-start',
+    width: '100%',
   },
 });
 
