@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-// Importez vos écrans
+
 import LoginScreen from '../src/scren/LoginScreen';
 import SignupScreen from '../src/scren/SignupScreen';
 import CameraScreen from '../src/scren/CameraScreen';
@@ -26,7 +26,6 @@ const AppNavigator = () => {
   );
 };
 
-// Stack Navigator pour la navigation après la connexion
 const MainStack = createNativeStackNavigator();
 
 const MainNavigator = () => (

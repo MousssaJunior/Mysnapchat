@@ -84,7 +84,7 @@ const AuthNavigator = () => {
       }
     } catch (error) {
       if (error.response) {
-        console.log('Error response:', error.response.data);
+     
         let errorMessage = 'Une erreur est survenue.';
         if (error.response.data.message) {
           switch (error.response.data.message) {
@@ -100,7 +100,7 @@ const AuthNavigator = () => {
         }
         Alert.alert('Erreur lors de la connexion', errorMessage);
       } else {
-        console.log('Error message:', error.message);
+   
         Alert.alert('Erreur lors de la connexion', error.message);
       }
     } finally {
