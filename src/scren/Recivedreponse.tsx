@@ -237,7 +237,7 @@ const clearDeleteTimeout = (snapId) => {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       {selectedSnap ? (
         <View>
           <TouchableOpacity onPress={handleBackToSnaps} style={styles.backButton}>
@@ -247,84 +247,110 @@ const clearDeleteTimeout = (snapId) => {
         </View>
       ) : (
         <View>
-          <Text style={styles.header}>SNAPS REÇUS pour {username}</Text>
-          {snaps.map((snap) => (
-            <TouchableOpacity key={snap._id} onPress={() => handleSnapSelect(snap)}>
-              <View style={styles.snapContainer}>
-                <Text style={styles.sender}>De: {snap.senderUsername}</Text>
-                <Text>Durée: {snap.duration} secondes</Text>
-                <Text>Date: {new Date(snap.date).toLocaleString()}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
+          <Text style={styles.header}>SNAPS REÇUS  {username}</Text>
+          <ScrollView style={styles.snapListContainer}>
+            {snaps.map((snap) => (
+              <TouchableOpacity key={snap._id} onPress={() => handleSnapSelect(snap)}>
+                <View style={styles.snapContainer}>
+                  <View style={styles.senderInfo}>
+                    <Text style={styles.sender}>{snap.senderUsername}</Text>
+                    <Text style={styles.sentAt}>{new Date(snap.date).toLocaleString()}</Text>
+                  </View>
+                  <View style={styles.imageContainer}>
+                    {snap.image ? (
+                      <Image source={{ uri: snap.image }} style={styles.snapImage} />
+                    ) : (
+                      <Text>Image indisponible</Text>
+                    )}
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
       )}
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-
+    backgroundColor: '#000',
+    paddingTop: 40,
+    paddingHorizontal: 20,
   },
   header: {
     fontSize: 24,
-    marginBottom: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 20,
     textAlign: 'center',
   },
-  snapContainer: {
-    marginBottom: 16,
-    padding: 16,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
+  snapListContainer: {
+    marginTop: 20,
+    marginBottom: 40,
   },
-  selectedSnapContainer: {
-    marginBottom: 16,
-    padding: 16,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
+  snapContainer: {
+    marginBottom: 20,
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 12,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  senderInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   sender: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 8,
+  },
+  sentAt: {
+    fontSize: 14,
+    color: '#888',
+  },
+  snapImage: {
+    marginTop: 10,
+    width: '100%',
+    height: 300,
+    borderRadius: 8,
   },
   backButton: {
-    padding: 10,
-    backgroundColor: '#DDDDDD',
-    marginBottom: 10,
-    borderRadius: 8,
+    marginBottom: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+    borderRadius: 12,
     alignItems: 'center',
   },
   backButtonText: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#000',
+  },
+  selectedSnapContainer: {
+    marginBottom: 20,
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
   },
   selectedSnapImage: {
     marginTop: 10,
     width: '100%',
-    height: 200,
-    resizeMode: 'cover',
-    borderRadius: 8,
-  },
-  snapImage: {
-    marginTop: 10,
-    width: '100%',
     height: 400,
-    resizeMode: 'contain',
+    borderRadius: 8,
   },
 });
 
