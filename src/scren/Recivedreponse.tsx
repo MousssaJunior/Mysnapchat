@@ -1,76 +1,87 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { useRoute } from '@react-navigation/native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
 
 const ReceivedSnaps = () => {
-  const [snaps, setSnaps] = useState([]); // État pour stocker les snaps reçus
-  const [loading, setLoading] = useState(true); // État pour le chargement
-  const [username, setUsername] = useState(''); // État pour stocker le nom d'utilisateur
-  const [selectedSnap, setSelectedSnap] = useState(null); // État pour stocker le snap sélectionné
-  const route = useRoute(); // Obtenir les paramètres de la route actuelle
-  const { userId } = route.params || ''; // Identifiant de l'utilisateur récupéré depuis les paramètres de la route
+  const route = useRoute();
+  const { userId } = route.params || '';
+  const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState('');
+  const [snaps, setSnaps] = useState([]);
+  const [selectedSnap, setSelectedSnap] = useState(null);
+  const [viewedSnaps, setViewedSnaps] = useState(new Set());
+  const [deleteTimeouts, setDeleteTimeouts] = useState({}); 
 
   useEffect(() => {
-    const fetchSnaps = async () => {
-      const token = await AsyncStorage.getItem('token'); // Récupérer le token d'authentification depuis AsyncStorage
-
+    const loadViewedSnaps = async () => {
       try {
-        // Récupération des détails de l'utilisateur
+        const viewedSnapsData = await AsyncStorage.getItem('viewedSnaps');
+        if (viewedSnapsData !== null) {
+          setViewedSnaps(new Set(JSON.parse(viewedSnapsData)));
+        }
+      } catch (error) {
+        console.log('Erreur lors du chargement des snaps vus:', error);
+      }
+    };
+
+    loadViewedSnaps();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0'; 
+
         const userResponse = await axios.get('https://snapchat.epidoc.eu/user', {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token,
-            'x-api-key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI',
+            'Authorization': `Bearer ${token}`,
+            'x-api-key': apiKey,
           },
         });
 
         if (userResponse.status !== 200) {
-          throw new Error(`Erreur HTTP ! statut : ${userResponse.status}`);
+          throw new Error(`Erreur HTTP ! Statut : ${userResponse.status}`);
         }
 
         const userData = userResponse.data.data;
-        const fetchedUsername = userData.username;
-        setUsername(fetchedUsername); // Mettre à jour le nom d'utilisateur dans l'état
+        setUsername(userData.username);
 
-        // Récupération des snaps de l'utilisateur
+
         const snapResponse = await axios.get('https://snapchat.epidoc.eu/snap', {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token,
-            'x-api-key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI',
+            'Authorization': `Bearer ${token}`,
+            'x-api-key': apiKey,
           },
         });
 
         if (snapResponse.status !== 200) {
-          throw new Error(`Erreur HTTP ! statut : ${snapResponse.status}`);
+          throw new Error(`Erreur HTTP ! Statut : ${snapResponse.status}`);
         }
 
-        const snapList = snapResponse.data.data || []; // Liste des snaps récupérée depuis la réponse
-
-        // Récupérer les détails de chaque snap avec une promesse asynchrone
+        const snapList = snapResponse.data.data || [];
         const snapDetailsPromises = snapList.map(async (snap) => {
-          // Récupération des détails de chaque snap
-          const snapDetailResponse = await axios.get(`https://snapchat.epidoc.eu/snap/${snap._id}`, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + token,
-              'x-api-key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI',
-            },
-          });
+          const [snapDetailResponse, senderResponse] = await Promise.all([
+            axios.get(`https://snapchat.epidoc.eu/snap/${snap._id}`, {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                'x-api-key': apiKey,
+              },
+            }),
+            axios.get(`https://snapchat.epidoc.eu/user/${snap.from}`, {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                'x-api-key': apiKey,
+              },
+            }),
+          ]);
 
-          // Récupérer les détails de l'utilisateur qui a envoyé le snap (sender)
-          const senderResponse = await axios.get(`https://snapchat.epidoc.eu/user/${snap.from}`, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + token,
-              'x-api-key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vdXNzYS1qdW5pb3IuZm9mYW5hQGVwaXRlY2guZXUiLCJpYXQiOjE3MTgwMTEwNTh9.hI23vvbPZcA1cZDm5cYkgydL2cHn3tO2DGHLhQgvFCI',
-            },
-          });
-
-          // Créer un nouvel objet snap avec les informations nécessaires
           const snapData = {
             _id: snap._id,
             from: snap.from,
@@ -80,34 +91,119 @@ const ReceivedSnaps = () => {
             image: snapDetailResponse.data.data.image,
           };
 
-          return snapData; // Retourner les données du snap avec le nom d'utilisateur du sender et les détails du snap
+          return snapData;
         });
 
-        const snapDetails = await Promise.all(snapDetailsPromises); // Attendre que toutes les promesses soient résolues
-        setSnaps(snapDetails); // Mettre à jour les snaps dans l'état
+        const snapDetails = await Promise.all(snapDetailsPromises);
+        const filteredSnaps = snapDetails.filter(snap => !viewedSnaps.has(snap._id));
+        setSnaps(filteredSnaps);
 
       } catch (error) {
-        console.log('Erreur :', error.response ? error.response.data : error.message);
+        console.log('Erreur :', error.message || error);
         let errorMessage = 'Une erreur est survenue.';
         if (error.response && error.response.data.message) {
           errorMessage = error.response.data.message;
         }
-        Alert.alert('Erreur', errorMessage); // Afficher une alerte en cas d'erreur
+        Alert.alert('Erreur', errorMessage);
       } finally {
-        setLoading(false); // Marquer le chargement comme terminé
+        setLoading(false);
       }
     };
 
-    fetchSnaps(); // Appeler la fonction pour récupérer les snaps lors du montage du composant
-  }, [userId]); // Effectuer la requête à chaque changement de userId
+    fetchData();
+  }, [userId, viewedSnaps]);
 
-  const handleSnapSelect = (snap) => {
-    setSelectedSnap(snap); // Mettre à jour l'état du snap sélectionné
+const handleSnapSelect = async (snap) => {
+  setSelectedSnap(snap);
+
+  if (!viewedSnaps.has(snap._id)) {
+
+    const timeout = setTimeout(() => {
+    
+      if (!viewedSnaps.has(snap._id)) {
+        console.log(`Snap ${snap._id} has not been viewed during duration, removing...`);
+        removeSnap(snap._id);
+      }
+    }, snap.duration * 1000); 
+    console.log(`Timeout set for Snap ${snap._id} for ${snap.duration} seconds`);
+
+    setDeleteTimeouts(prevDeleteTimeouts => ({
+      ...prevDeleteTimeouts,
+      [snap._id]: timeout,
+    }));
+  } else {
+    console.log(`Snap ${snap._id} has already been viewed`);
+  }
+
+  const markSnapAsViewed = () => {
+    setViewedSnaps(prevViewedSnaps => {
+      const newViewedSnaps = new Set(prevViewedSnaps);
+      newViewedSnaps.add(snap._id);
+      saveViewedSnaps(newViewedSnaps);
+      console.log(`Snap ${snap._id} marked as viewed`);
+      return newViewedSnaps;
+    });
   };
+
+  const checkDurationAndMarkAsViewed = () => {
+    if (!viewedSnaps.has(snap._id)) {
+      markSnapAsViewed();
+    }
+  };
+
+  await new Promise(resolve => setTimeout(resolve, snap.duration * 1000));
+
+  checkDurationAndMarkAsViewed();
+};
+
+  //   setViewedSnaps(prevViewedSnaps => {
+  //     const newViewedSnaps = new Set(prevViewedSnaps);
+  //     newViewedSnaps.add(snap._id);
+  //     saveViewedSnaps(newViewedSnaps);
+  //     console.log(`Snap ${snap._id} marked as viewed`);
+  //     return newViewedSnaps;
+  //   });
+  // };
+  
+
+const saveViewedSnaps = useCallback(async (updatedViewedSnaps) => {
+  try {
+    await AsyncStorage.setItem('viewedSnaps', JSON.stringify(Array.from(updatedViewedSnaps)));
+    console.log('Viewed snaps saved:', updatedViewedSnaps);
+  } catch (error) {
+    console.log('Erreur lors de la sauvegarde des snaps vus:', error);
+  }
+}, []);
+
+
+
+
+const removeSnap = (snapId) => {
+  setSnaps(prevSnaps => prevSnaps.filter(snap => snap._id !== snapId));
+  clearDeleteTimeout(snapId);
+};
+
 
   const handleBackToSnaps = () => {
-    setSelectedSnap(null); // Réinitialiser l'état du snap sélectionné pour revenir à la liste des snaps
+    setSelectedSnap(null);
+
+    Object.keys(deleteTimeouts).forEach(snapId => {
+      clearTimeout(deleteTimeouts[snapId]);
+    });
+    setDeleteTimeouts({});
   };
+
+const clearDeleteTimeout = (snapId) => {
+  if (deleteTimeouts[snapId]) {
+    clearTimeout(deleteTimeouts[snapId]);
+    console.log(`Timeout cleared for Snap ${snapId}`);
+    setDeleteTimeouts(prevDeleteTimeouts => {
+      const updatedTimeouts = { ...prevDeleteTimeouts };
+      delete updatedTimeouts[snapId];
+      return updatedTimeouts;
+    });
+  }
+};
 
   const renderSnapDetails = () => (
     <View key={selectedSnap._id} style={styles.selectedSnapContainer}>
@@ -131,6 +227,7 @@ const ReceivedSnaps = () => {
     );
   }
 
+
   if (snaps.length === 0) {
     return (
       <View style={styles.container}>
@@ -140,7 +237,6 @@ const ReceivedSnaps = () => {
   }
 
   return (
-
     <ScrollView style={styles.container}>
       {selectedSnap ? (
         <View>
@@ -156,6 +252,7 @@ const ReceivedSnaps = () => {
             <TouchableOpacity key={snap._id} onPress={() => handleSnapSelect(snap)}>
               <View style={styles.snapContainer}>
                 <Text style={styles.sender}>De: {snap.senderUsername}</Text>
+                <Text>Durée: {snap.duration} secondes</Text>
                 <Text>Date: {new Date(snap.date).toLocaleString()}</Text>
               </View>
             </TouchableOpacity>
