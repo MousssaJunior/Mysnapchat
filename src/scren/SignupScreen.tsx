@@ -1,34 +1,40 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { launchImageLibrary } from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
+import * as ImageManipulator from 'expo-image-manipulator';
 import axios from 'axios';
 
 const SignupScreen = ({ navigation }) => {
-  const [profilePicture, setProfilePicture] = useState('');
+  const [profilePicture, setProfilePicture] = useState(null);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const register = async () => {
-    if (email && password && username) {
-      try {
-        console.log('Data being sent:', {
-          email,
-          username,
-          profilePicture,
-          password,
-        });
+    console.log('Email:', email);
+    console.log('Password:', password);
+    console.log('Username:', username);
+    console.log('Profile Picture:', profilePicture);
 
-        const response = await axios.post('https://snapchat.epidoc.eu/user', {
+    if (email && password && username && profilePicture) {
+      try {
+        const data = {
           email,
           username,
           profilePicture,
           password,
-        },{
-            headers:{
-           "X-API-Key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0"
-        }});
+        };
+
+        console.log('Data being sent:', data);
+
+        const response = await axios.post('https://snapchat.epidoc.eu/user', data, {
+          headers: {
+            "X-API-Key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthcmltLmJhcmFAZXBpdGVjaC5ldSIsImlhdCI6MTcxODEwNjgzOH0.8E6eoi_eRSd7TLYUG3p2BMtTfiQxzzVf25mStXIqJq0", 
+            "Content-Type": "application/json"
+          }
+        });
 
         if (response.status === 200) {
           Alert.alert('Inscription réussie');
@@ -46,33 +52,77 @@ const SignupScreen = ({ navigation }) => {
         }
       }
     } else {
-      Alert.alert('Veuillez remplir tous les champs');
+      if (!profilePicture) {
+        Alert.alert('Photo de profil manquante', 'Veuillez sélectionner une photo de profil avant de continuer.');
+      } else {
+        Alert.alert('Veuillez remplir tous les champs');
+      }
     }
   };
 
-  const chooseImage = () => {
-    launchImageLibrary({}, (response) => {
-      if (response.assets && response.assets.length > 0) {
-        setProfilePicture(response.assets[0].uri);
-      }
+  const chooseImage = async () => {
+    console.log('Choose image button pressed');
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      console.log('Permission to access media library denied');
+      Alert.alert('Permission Requise', 'Veuillez accorder les permissions d\'accès à la galerie dans les paramètres de votre système.');
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
     });
+
+    console.log('Image picker result:', result);
+
+    if (!result.canceled) {
+      const selectedImageUri = result.assets[0].uri;
+      console.log('Image selected:', selectedImageUri);
+
+      try {
+      
+        const resizedImage = await ImageManipulator.manipulateAsync(selectedImageUri, [{ resize: { width: 360, height: 640 } }], {
+          compress: 1,
+          format: ImageManipulator.SaveFormat.JPEG, 
+        });
+
+      
+        const base64Image = await FileSystem.readAsStringAsync(resizedImage.uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+
+      
+        const base64String = `data:image/jpeg;base64,${base64Image}`;
+        console.log('Base64 string:', base64String.slice(0, 100)); 
+        
+    
+        setProfilePicture(base64String);
+      } catch (error) {
+        console.log('Error converting image to base64:', error);
+        Alert.alert('Erreur', 'Erreur lors de la conversion de l\'image.');
+      }
+    } else {
+      console.log('Image picker cancelled');
+    }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.logoContainer}>
-        <Image source={require('../asset/logintop.png')} style={styles.logo} />
+       <View style={styles.topImageContainer}>
+              <Image source={require('../asset/logintop.png')} style={styles.topImage} />
+            </View>
+      <View style={styles.imagePickerContainer}>
+        <TouchableOpacity style={styles.imagePicker} onPress={chooseImage}>
+          {profilePicture ? (
+            <Image source={{ uri: profilePicture }} style={styles.profilePicture} />
+          ) : (
+            <FontAwesome name="camera" size={40} color="#000" />
+          )}
+        </TouchableOpacity>
       </View>
-
-      <Text style={styles.signUpText}>Créer votre compte</Text>
-
-      <TouchableOpacity style={styles.imagePicker} onPress={chooseImage}>
-        {profilePicture ? (
-          <Image source={{ uri: profilePicture }} style={styles.profilePicture} />
-        ) : (
-          <FontAwesome name="camera" size={30} color="#FFFC00" />
-        )}
-      </TouchableOpacity>
       <View style={styles.inputContainer}>
         <FontAwesome name="user" size={20} color="#000" style={styles.inputIcon} />
         <TextInput
@@ -122,30 +172,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 20,
   },
-  logoContainer: {
-    marginBottom: 20,
+  topImageContainer: {
+    alignItems: 'center',
+    marginBottom: 30,
   },
-  logo: {
-    width: 100,
-    height: 100,
+  topImage: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
   },
-  signUpText: {
-    textAlign: "center",
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#000",
+  imagePickerContainer: {
+    alignItems: 'center',
     marginBottom: 20,
   },
   imagePicker: {
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: "#FFF",
     borderRadius: 50,
     borderWidth: 2,
     borderColor: "#000",
-    marginBottom: 20,
     width: 100,
     height: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   profilePicture: {
     width: 100,

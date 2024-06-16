@@ -1,16 +1,57 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import { useNavigation } from '@react-navigation/native'; 
+import axios from 'axios';
 
-export default function ProfileView({ navigation }) {
+export default function ProfileView() {
+  const [profile, setProfile] = useState({
+    username: 'Unknown',
+    profilePicture: null,
+  });
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          navigation.navigate('Login');
+          return;
+        }
+
+        const response = await axios.get('https://snapchat.epidoc.eu/user', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'x-api-key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhcmFrYXJpbTAxMjhAZ21haWwuY29tIiwiaWQiOiI2NjZkN2Q2MzA4NjJlMjlkZWY0MzFmNzciLCJpYXQiOjE3MTg0NjcxMjIsImV4cCI6MTcxODU1MzUyMn0.uBN-sHpc-phPvtNNzG7S_RJoqCBAbyfAFIiw4zuVYII', 
+          },
+        });
+
+        if (response.status === 200) {
+          const { username, profilePicture } = response.data;
+          setProfile({
+            username,
+            profilePicture: profilePicture ? `data:image/jpeg;base64,${profilePicture}` : null,
+          });
+        } else {
+          Alert.alert('Erreur', 'Erreur lors de la récupération des données du profil.');
+        }
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+        Alert.alert('Erreur', 'Erreur lors de la récupération des données du profil.');
+      }
+    };
+
+    fetchProfileData();
+  }, []);
+
   const handleLogout = async () => {
     try {
-    
       await AsyncStorage.removeItem('token');
- 
-      navigation.navigate('Camera');
+      navigation.navigate('Login');
     } catch (error) {
       console.error('Error logging out:', error);
+      Alert.alert('Erreur lors de la déconnexion', 'Une erreur est survenue lors de la déconnexion.');
     }
   };
 
@@ -21,22 +62,8 @@ export default function ProfileView({ navigation }) {
           <Image
             style={styles.avatar}
           />
-          <Text style={styles.name}>unknow</Text>
+          <Text style={styles.username}>{profile.username}</Text>
         </View>
-      </View>
-
-      <View style={styles.profileDetail}>
-        <View style={styles.detailContent}>
-          <Text style={styles.title}>Followers</Text>
-          <Text style={styles.count}>200</Text>
-        </View>
-        <View style={styles.detailContent}>
-          <Text style={styles.title}>Following</Text>
-          <Text style={styles.count}>200</Text>
-        </View>
-        <TouchableOpacity style={styles.buttonContainer}>
-            <Text>CRUD</Text>
-          </TouchableOpacity>
       </View>
 
       <View style={styles.body}>
@@ -45,10 +72,9 @@ export default function ProfileView({ navigation }) {
             <Text>Logout</Text>
           </TouchableOpacity>
           <Text style={styles.description}>
-            Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis,
-            omittam deseruisse consequuntur ius an,
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed varius tellus eget metus efficitur,
+            sed tempus felis placerat. Phasellus a ipsum vel mi accumsan varius non a risus.
           </Text>
-          
         </View>
       </View>
     </View>
@@ -56,72 +82,52 @@ export default function ProfileView({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   header: {
     backgroundColor: '#DDDDDD',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 20,
   },
   headerContent: {
-    padding: 30,
     alignItems: 'center',
   },
   avatar: {
-    width: 130,
-    height: 130,
-    borderRadius: 63,
-    borderWidth: 4,
-    borderColor: '#DDDDDD',
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 2,
+    borderColor: '#000',
     marginBottom: 10,
   },
-  name: {
-    fontSize: 22,
-    color: '#FFFFFF',
-    fontWeight: '600',
-  },
-  profileDetail: {
-    alignSelf: 'center',
-    marginTop: 200,
-    alignItems: 'center',
-    flexDirection: 'row',
-    position: 'absolute',
-    backgroundColor: '#ffffff',
-    borderRadius: 10, 
-  },
-  detailContent: {
-    margin: 10,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 20,
-    color: '#DDDDDD',
-  },
-  count: {
-    fontSize: 18,
-  },
-  bodyContent: {
-    flex: 1,
-    alignItems: 'center',
-    padding: 30,
-    marginTop: 40,
-  },
-  textInfo: {
-    fontSize: 18,
-    marginTop: 20,
-    color: '#696969',
-  },
-  buttonContainer: {
+  username: {
+    fontSize: 24,
+    fontWeight: 'bold',
     marginTop: 10,
-    height: 45,
-    flexDirection: 'row',
+  },
+  body: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
-    width: 250,
-    borderRadius: 30,
+    paddingHorizontal: 20,
+  },
+  bodyContent: {
+    alignItems: 'center',
+  },
+  buttonContainer: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     backgroundColor: '#DDDDDD',
+    borderRadius: 10,
   },
   description: {
-    fontSize: 20,
-    color: '#00CED1',
-    marginTop: 10,
+    marginTop: 20,
     textAlign: 'center',
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#333',
   },
 });
